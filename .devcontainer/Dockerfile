@@ -1,0 +1,1 @@
+FROM cameronkerrnz/logstash-plugin-dev:latest
