@@ -101,9 +101,14 @@ Test: {"@timestamp":"2025-01-13T12:34:56.789Z","message":"Hello, Logstash!","@ve
 
 This final step confirms that your plugin works as expected and processes events correctly.
 
-Resources
-	• Elastic Java Plugin Documentation
-	• Example Plugin Repository
-	• Logstash Downloads
-	• Gradle Installation
-	• RubyInstaller for Windows
+Resources-
+
+Elastic Java Plugin Documentation: https://www.elastic.co/guide/en/logstash/current/java-output-plugin.html
+
+Example Plugin Repository: https://github.com/logstash-plugins/logstash-output-java_output_example
+
+Logstash Downloads: https://www.elastic.co/downloads/logstash
+
+Gradle Installation Guide: https://gradle.org/install/
+
+RubyInstaller for Windows: https://rubyinstaller.org/
