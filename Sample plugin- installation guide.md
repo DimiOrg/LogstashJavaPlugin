@@ -1,0 +1,110 @@
+Guide to Creating a Logstash Output Plugin in Java (Windows Only)
+This guide explains how to create a Logstash output plugin in Java on Windows, based on the steps outlined in the Elastic documentation and the example repository at GitHub. 
+
+1. Prerequisites
+Before you begin, ensure you have the following installed and configured:
+	• Java Development Kit (JDK):
+		○ Install JDK 11 or later. This is required to compile and run the Java code for your plugin. Ensure JAVA_HOME is set to the JDK installation directory.
+		○ Verify installation:
+java -version
+	• Gradle:
+		○ Download and install Gradle from the official Gradle website. Gradle is used to build the plugin and package it as a Ruby gem.
+		○ Verify installation:
+gradle -v
+	• Ruby:
+		○ Install Ruby from RubyInstaller for Windows. Ruby is required because Logstash plugins are packaged as Ruby gems for compatibility with the Logstash ecosystem.
+		○ Verify installation:
+ruby -v
+	• Logstash Installation:
+		○ Download and extract Logstash from the official Elastic website. This will allow you to test the plugin after it is created.
+
+2. Clone the Example Repository
+	1. Clone the example repository:
+git clone https://github.com/logstash-plugins/logstash-output-java_output_example.git
+	2. Navigate to the cloned directory:
+cd logstash-output-java_output_example
+
+This repository provides a boilerplate plugin implementation to help you get started with minimal setup.
+
+3. Clone the Logstash Repository
+	1. Clone the Logstash repository to get the plugin API:
+git clone --branch <branch_name> --single-branch https://github.com/elastic/logstash.git <target_folder>
+Replace:
+		○ <branch_name>: The branch corresponding to your Logstash version (e.g., 7.2, 8.0).
+		○ <target_folder>: The target directory for the repository (e.g., logstash-codebase).
+	2. Navigate to the cloned directory:
+cd <target_folder>
+	3. Compile the Logstash codebase to generate the plugin API JAR:
+gradle assemble
+	4. Locate the JAR file in:
+logstash-core/build/libs/logstash-core-x.y.z.jar
+Note the full path to the JAR file.
+
+The Logstash repository contains the Java plugin API required for building the plugin. Compiling the codebase ensures the required dependencies are available.
+
+4. Configure the Plugin Project
+	1. In the cloned plugin project (logstash-output-java_output_example), create a file named gradle.properties in the root directory.
+	2. Add the following line to specify the path to the Logstash core JAR:
+LOGSTASH_CORE_PATH=C:/logstash-codebase/logstash-core
+Replace C:/logstash-codebase/logstash-core with the directory containing logstash-core-x.y.z.jar. Use forward slashes for Windows paths.
+	3. Optionally, set the path using the echo command for easier setup:
+echo LOGSTASH_CORE_PATH=C:/logstash-codebase/logstash-core > gradle.properties
+
+This configuration ensures the plugin project can locate the Logstash core JAR file for compilation.
+
+5. Prepare Files for Building the Gem
+	1. Copy the following files from the cloned Logstash repository to your plugin project:
+		○ VERSION
+		○ version.yml
+		○ All Ruby gem-related files (e.g., Gemfile, .gemspec).
+	2. Ensure these files are in the root directory of the plugin project.
+
+These files are necessary to define the version and metadata required for packaging the plugin as a Ruby gem.
+
+6. Build the Plugin Gem
+	1. Navigate to the root of your plugin project directory.
+	2. Run the Gradle command to build the gem:
+gradle gem
+	3. Locate the generated gem file in:
+logstash-output-java_output_example-x.y.z.gem
+This step packages your Java plugin into a Ruby gem that can be installed and used by Logstash.
+
+7. Install the Plugin in Logstash
+	1. Move the gem file to a directory without spaces or special characters, e.g., C:/logstash/plugins.
+	2. Install the plugin in Logstash:
+bin/logstash-plugin install --no-verify --local C:/logstash/plugins/logstash-output-java_output_example-x.y.z.gem
+	3. Verify installation:
+bin/logstash-plugin list
+Look for logstash-output-java_output_example in the output.
+
+Installing the plugin in Logstash integrates it into the Logstash pipeline for testing and usage.
+
+8. Test the Plugin
+	1. Create a test configuration file (e.g., java_output.conf):
+input {
+  generator {
+    message => "Hello, Logstash!"
+    count => 1
+  }
+}
+
+output {
+  java_output_example {
+    prefix => "Test: "
+  }
+}
+
+	2. Run Logstash with the configuration:
+bin/logstash -f C:/path/to/java_output.conf
+	3. Verify the output:
+Test: {"@timestamp":"2025-01-13T12:34:56.789Z","message":"Hello, Logstash!","@version":"1"}
+
+This final step confirms that your plugin works as expected and processes events correctly.
+
+Resources
+	• Elastic Java Plugin Documentation
+	• Example Plugin Repository
+	• Logstash Downloads
+	• Gradle Installation
+	• RubyInstaller for Windows
+
