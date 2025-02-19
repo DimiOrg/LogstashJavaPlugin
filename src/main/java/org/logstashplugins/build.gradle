@@ -9,13 +9,13 @@ buildscript {
 }
 
 plugins {
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'java'
 }
 
 ext {
     snakeYamlVersion = '2.2'
-    shadowGradlePluginVersion = '8.1.1'
+    shadowGradlePluginVersion = '7.1.2'
 }
 
 apply from: "/usr/share/logstash" + "/../rubyUtils.gradle"

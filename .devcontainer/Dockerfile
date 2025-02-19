@@ -2,12 +2,13 @@
 FROM openjdk:11-jdk
 
 # Set environment variables
-ENV LOGSTASH_VERSION=8.0.0
-ENV GRADLE_VERSION=8.0
+ENV LOGSTASH_VERSION=8.16.0
+ENV GRADLE_VERSION=7.3
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 ENV LOGSTASH_CORE_PATH=/usr/share/logstash
+ENV LS_JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
 
 # Install dependencies
 RUN apt-get update && \
@@ -28,10 +29,10 @@ RUN wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.
 ENV PATH="/opt/gradle/bin:${PATH}"
 
 # Install Logstash
-RUN wget https://artifacts.elastic.co/downloads/logstash/logstash-8.0.0-linux-x86_64.tar.gz && \
-    tar -xzf logstash-8.0.0-linux-x86_64.tar.gz && \
-    mv logstash-8.0.0 /usr/share/logstash && \
-    rm logstash-8.0.0-linux-x86_64.tar.gz
+RUN wget https://artifacts.elastic.co/downloads/logstash/logstash-8.16.0-linux-x86_64.tar.gz && \
+    tar -xzf logstash-8.16.0-linux-x86_64.tar.gz && \
+    mv logstash-8.16.0 /usr/share/logstash && \
+    rm logstash-8.16.0-linux-x86_64.tar.gz
 
 ENV LS_HOME="/usr/share/logstash"
 
@@ -78,6 +79,9 @@ RUN mkdir /var/run/sshd && \
     echo 'root:root' | chpasswd && \
     sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
     sed -i 's/UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
+
+# Expose the remote debugging port
+EXPOSE 5005
 
 # Set the entrypoint to start SSH and Logstash
 ENTRYPOINT ["sh", "-c", "service ssh start && /usr/share/logstash/bin/logstash -f /usr/share/logstash/config/logstash.conf"]
