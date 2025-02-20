@@ -15,6 +15,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '11'
+          distribution: 'temurin'  # You can use 'temurin', 'zulu', 'adopt', etc.
 
       - name: Build with Gradle
         run: ./gradlew build
