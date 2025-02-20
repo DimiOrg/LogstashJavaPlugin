@@ -69,7 +69,7 @@ RUN ./gradlew gem -DLOGSTASH_CORE_PATH=${LOGSTASH_CORE_PATH}
 RUN ls -l /usr/share/logstash/plugins/my-plugin/build/libs
 
 # Register the plugin with Logstash
-RUN /usr/share/logstash/bin/logstash-plugin install --no-verify --local /usr/share/logstash/plugins/my-plugin/logstash-output-java_output_example-0.1.0-java.gem
+RUN /usr/share/logstash/bin/logstash-plugin install --no-verify --local /usr/share/logstash/plugins/my-plugin/logstash-output-microsoft-sentinel-log-analytics-logstash-output-plugin-0.1.0-java.gem
 
 # Copy the Logstash configuration file
 COPY ../src/main/java/org/logstashplugins/logstash.conf /usr/share/logstash/config/logstash.conf

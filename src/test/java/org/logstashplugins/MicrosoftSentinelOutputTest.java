@@ -5,7 +5,7 @@ import co.elastic.logstash.api.Event;
 import org.junit.Assert;
 import org.junit.Test;
 import org.logstash.plugins.ConfigurationImpl;
-import org.logstashplugins.JavaOutputExample;
+import org.logstashplugins.MicrosoftSentinelOutput;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -13,16 +13,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JavaOutputExampleTest {
+public class MicrosoftSentinelOutputTest {
 
     @Test
-    public void testJavaOutputExample() {
+    public void testMicrosoftSentinelOutput() {
         String prefix = "Prefix";
         Map<String, Object> configValues = new HashMap<>();
-        configValues.put(JavaOutputExample.PREFIX_CONFIG.name(), prefix);
+        configValues.put(MicrosoftSentinelOutput.PREFIX_CONFIG.name(), prefix);
         Configuration config = new ConfigurationImpl(configValues);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        JavaOutputExample output = new JavaOutputExample("test-id", config, null, baos);
+        MicrosoftSentinelOutput output = new MicrosoftSentinelOutput("test-id", config, null, baos);
 
         String sourceField = "message";
         int eventCount = 5;
