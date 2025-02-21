@@ -22,7 +22,7 @@ jobs:
           wget https://services.gradle.org/distributions/gradle-7.3-bin.zip
           unzip gradle-7.3-bin.zip
           echo "GRADLE_HOME=$(pwd)/gradle-7.3" >> $GITHUB_ENV
-          echo "$GRADLE_HOME/bin" >> $GITHUB_PATH
+          echo "$(pwd)/gradle-7.3/bin" >> $GITHUB_PATH
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
