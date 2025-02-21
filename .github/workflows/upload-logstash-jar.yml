@@ -1,0 +1,20 @@
+name: Upload Logstash Core JAR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  upload-jar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Upload Logstash Core JAR
+        uses: actions/upload-artifact@v2
+        with:
+          name: logstash-core-jar
+          path: ./logstash-core.jar

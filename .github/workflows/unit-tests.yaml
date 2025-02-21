@@ -17,6 +17,12 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
+      - name: Download Logstash Core JAR
+        uses: actions/download-artifact@v2
+        with:
+          name: logstash-core-jar
+          path: /usr/share/logstash
+
       - name: Download and set up Gradle 7.3
         run: |
           wget https://services.gradle.org/distributions/gradle-7.3-bin.zip
