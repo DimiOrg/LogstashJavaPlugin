@@ -32,7 +32,7 @@ public class MicrosoftSentinelOutput implements Output {
         this(id, configuration, context, System.out);
     }
 
-    MicrosoftSentinelOutput(final String id, final Configuration config, final Context context, OutputStream targetStream) {
+    public MicrosoftSentinelOutput(final String id, final Configuration config, final Context context, OutputStream targetStream) {
         // constructors should validate configuration options
         this.id = id;
         prefix = config.get(PREFIX_CONFIG);

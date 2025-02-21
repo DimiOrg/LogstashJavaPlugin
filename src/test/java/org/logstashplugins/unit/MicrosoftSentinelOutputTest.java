@@ -1,10 +1,11 @@
-package org.logstashplugins;
+package org.logstashplugins.unit;
 
 import co.elastic.logstash.api.Configuration;
 import co.elastic.logstash.api.Event;
 import org.junit.Assert;
 import org.junit.Test;
 import org.logstash.plugins.ConfigurationImpl;
+import org.logstashplugins.MicrosoftSentinelOutput;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
