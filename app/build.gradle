@@ -1,0 +1,35 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.mycompany.loganalytics'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // ✅ Include the Azure SDK BOM to manage dependency versions automatically
+    implementation platform('com.azure:azure-sdk-bom:1.2.7')
+
+    // ✅ Use Azure Monitor Ingestion SDK (version managed by BOM)
+    implementation 'com.azure:azure-monitor-ingestion:1.2.7'
+
+    // ✅ Azure Identity for authentication (version managed by BOM)
+    implementation 'com.azure:azure-identity'
+
+    // ✅ JSON Handling (Jackson)
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+}
+
+
+
+application {
+    mainClass = 'com.mycompany.loganalytics.LogAnalyticsSender'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
