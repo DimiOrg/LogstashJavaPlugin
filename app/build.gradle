@@ -11,20 +11,18 @@ repositories {
 }
 
 dependencies {
-    // ✅ Include the Azure SDK BOM to manage dependency versions automatically
+    // Include the Azure SDK BOM to manage dependency versions automatically
     implementation platform('com.azure:azure-sdk-bom:1.2.7')
 
-    // ✅ Use Azure Monitor Ingestion SDK (version managed by BOM)
+    // Use Azure Monitor Ingestion SDK (version managed by BOM)
     implementation 'com.azure:azure-monitor-ingestion:1.2.7'
 
-    // ✅ Azure Identity for authentication (version managed by BOM)
+    // Azure Identity for authentication (version managed by BOM)
     implementation 'com.azure:azure-identity'
 
-    // ✅ JSON Handling (Jackson)
+    // JSON Handling (Jackson)
     implementation 'com.fasterxml.jackson.core:jackson-databind'
 }
-
-
 
 application {
     mainClass = 'com.mycompany.loganalytics.LogAnalyticsSender'
