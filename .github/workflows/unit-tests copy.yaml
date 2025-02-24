@@ -1,0 +1,46 @@
+name: Logstash 8 integration tests
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Download and set up Gradle 7.3
+        run: |
+          wget https://services.gradle.org/distributions/gradle-7.3-bin.zip
+          unzip gradle-7.3-bin.zip
+          echo "GRADLE_HOME=$(pwd)/gradle-7.3" >> $GITHUB_ENV
+          echo "$(pwd)/gradle-7.3/bin" >> $GITHUB_PATH
+
+      - name: Upload Logstash Core JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: logstash-core-jar
+          path: ./logstash-core.jar
+
+      - name: Download Logstash Core JAR
+        uses: actions/download-artifact@v4
+        with:
+          name: logstash-core-jar
+          path: /usr/share/logstash
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: gradle build
+
+      - name: Run tests
+        run: gradle test --tests "org.logstashplugins.unit.*"
