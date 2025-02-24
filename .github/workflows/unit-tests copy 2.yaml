@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Logstash 7 integration tests
 
 on:
   pull_request:
