@@ -10,6 +10,12 @@
             "request": "attach",
             "hostName": "localhost",
             "port": 5005
-        }
+        },
+        {
+            "type": "java",
+            "name": "Launch Main",
+            "request": "launch",
+            "mainClass": "org.logstashplugins.LogAnalyticsSender",
+          }
     ]
 }
