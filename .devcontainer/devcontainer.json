@@ -6,9 +6,12 @@
     "vscode": {
       "settings": { 
         "terminal.integrated.shell.linux": "/bin/bash"
-      }
+      },
+      "extensions": [
+        "vscjava.vscode-java-pack"
+      ]
     }
   },
-  //"mounts": [ "source=${localWorkspaceFolder},target=/work,type=bind" ],
-  "remoteUser": "root"
+  "remoteUser": "root",
+  "postStartCommand": "/usr/share/logstash/bin/logstash -f /usr/share/logstash/config/logstash.conf"
 }

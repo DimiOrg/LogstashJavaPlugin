@@ -414,6 +414,10 @@ void validatePluginJar(File pluginJar, String group) {
             if (pluginAnnotation != pluginInfo.pluginName) {
                 validationErrors.add("The 'name' property on the @LogstashPlugin (which is '" + pluginAnnotation + "') must match the 'pluginName' property which is defined as '" + pluginInfo.pluginName + "' in the build.gradle file")
             }
+
+            if (pluginAnnotation.replace("_", "").toLowerCase() != pluginInfo.pluginClass.toLowerCase()) {
+                validationErrors.add("The 'name' property on the @LogstashPlugin (which is '" + pluginAnnotation + "') must match the plugin class name '" + pluginInfo.pluginClass + "' excluding casing and underscores")
+            }
         }
     }
 

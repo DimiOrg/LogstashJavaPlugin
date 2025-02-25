@@ -33,7 +33,7 @@ pluginInfo.email           = ['info@elastic.co']
 pluginInfo.homepage        = "http://www.elastic.co/guide/en/logstash/current/index.html"
 pluginInfo.pluginType      = "output"
 pluginInfo.pluginClass     = "MicrosoftSentinelOutput"
-pluginInfo.pluginName      = "microsoft-sentinel-log-analytics-logstash-output-plugin" // must match the @LogstashPlugin annotation in the main plugin class
+pluginInfo.pluginName      = "microsoft_sentinel_output" // must match the @LogstashPlugin annotation in the main plugin class
 // ===========================================================================
 
 java {

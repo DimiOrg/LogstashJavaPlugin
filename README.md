@@ -37,7 +37,7 @@ To create a sample file, follow the following steps:
 1)	Copy the output plugin configuration below to your Logstash configuration file:
 ```
 output {
-    microsoft-sentinel-log-analytics-logstash-output-plugin {
+    microsoft_sentinel_output {
         create_sample_file => true
         sample_file_path => "<enter the path to the file in which the sample data will be written>" #for example: "c:\\temp" (for windows) or "/var/log" for Linux.
     }
@@ -64,7 +64,7 @@ input {
 }
 
 output {
-    microsoft-sentinel-log-analytics-logstash-output-plugin {
+    microsoft_sentinel_output {
         create_sample_file => true
         sample_file_path => "<enter the path to the file in which the sample data will be written>" #for example: "c:\\temp" (for windows) or "/var/log" for Linux.
     }
@@ -106,7 +106,7 @@ After retrieving the required values replace the output section of the Logstash 
 Here is an example for the output plugin configuration section:
 ```
 output {
-    microsoft-sentinel-log-analytics-logstash-output-plugin {
+    microsoft_sentinel_output {
         client_app_Id => "<enter your client_app_id value here>"
         client_app_secret => "<enter your client_app_secret value here>"
         tenant_id => "<enter your tenant id here>"
@@ -152,7 +152,7 @@ input {
  filter {
 }
 output {
-    microsoft-sentinel-log-analytics-logstash-output-plugin {
+    microsoft_sentinel_output {
       client_app_Id => "619c1731-15ca-4403-9c61-xxxxxxxxxxxx"
       client_app_secret => "xxxxxxxxxxxxxxxx"
       tenant_id => "72f988bf-86f1-41af-91ab-xxxxxxxxxxxx"
@@ -176,7 +176,7 @@ input {
  filter {
 }
 output {
-    microsoft-sentinel-log-analytics-logstash-output-plugin {
+    microsoft_sentinel_output {
       client_app_Id => "619c1731-15ca-4403-9c61-xxxxxxxxxxxx"
       client_app_secret => "xxxxxxxxxxxxxxxx"
       tenant_id => "72f988bf-86f1-41af-91ab-xxxxxxxxxxxx"
@@ -196,7 +196,7 @@ input {
 }
 
 output {
-    microsoft-sentinel-log-analytics-logstash-output-plugin {
+    microsoft_sentinel_output {
       client_app_Id => "${CLIENT_APP_ID}"
       client_app_secret => "${CLIENT_APP_SECRET}"
       tenant_id => "${TENANT_ID}"
@@ -243,28 +243,31 @@ To debug the plugin, follow these steps:
 
 ### 1. Open the Project in a Dev Container. (This dev container was tested on Visual Studio Code and Intellij Idea but should work on any other IDE with support)
 
-### 2. Inside the dev container, make sure all necessary prerequisites are installed, including Logstash and the plugin. (run /usr/share/logstash/bin/logstash-plugin and verify the plugin is listed)
+### 2. Use the Debugger:
+You should be able to simple hit "Run -> Debug", the debugger will connect and you can put breakpoints in the plugin code.
 
-### 3. Run Logstash process:
-Start Logstash with the following command to make it listen on port 5005 for remote connections:
-```
-/usr/share/logstash/bin/logstash -f /usr/share/logstash/config/logstash.conf
-```
-This should run Logstash in remote debugging mode since `LS_JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"` was set in the dockerfile
+#### How does this setup work?
+ the dev container is built by the Dockerfile. in this Dockerfile we defined `ENV LS_JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"`. this makes every logstash process to run in debug mode and wait for a remote debugger on port 5005
 
-### 4. Use the Debugger:
-Use the launch.json configuration in the .vscode directory to run the debugger. This will connect to the Logstash process:
+then in devcontainer.json we have this - 
+`"postStartCommand": "/usr/share/logstash/bin/logstash -f /usr/share/logstash/config/logstash.conf"`
+so the Logstash process starts after the dev container is up and running and waits for a debugger
+
+and we have this launch.json:
 ```
-{
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "java",
-      "name": "Debug Logstash Plugin",
-      "request": "attach",
-      "hostName": "localhost",
-      "port": 5005
-    }
-  ]
-}
+"configurations": [
+        {
+            "type": "java",
+            "name": "Remote Debug Logstash",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": 5005
+        }
+    ]
 ```
+so when we start a debug session, it connects to port 5005 and attached a remote debugger
+
+#### How to debug with new changes?
+If you made changes to the plugin and you want to debug the code after changes, you will have to rebuild the dev container. This is because currently the running Logstash process is running with the plugin that was installed during the container build.
+
+To rebuild the dev container: ctrl + shift + p --> Dev Containers: Rebuild Container
