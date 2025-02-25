@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
 
 // class name must match plugin name
-@LogstashPlugin(name = "microsoft-sentinel-log-analytics-logstash-output-plugin")
+@LogstashPlugin(name = "microsoft_sentinel_output")
 public class MicrosoftSentinelOutput implements Output {
 
     public static final PluginConfigSpec<String> PREFIX_CONFIG =

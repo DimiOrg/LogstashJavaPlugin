@@ -44,9 +44,9 @@ RUN ./bin/logstash-plugin install logstash-input-beats
 
 # Copy the plugin code and Gradle files into the container
 COPY ../src/main/java/org/logstashplugins /usr/share/logstash/plugins/my-plugin/src/main/java/org/logstashplugins
-COPY ../envsInstallationResources/Logstash8.16/settings.gradle /usr/share/logstash/plugins/my-plugin/settings.gradle
-COPY ../envsInstallationResources/Logstash8.16/build.gradle /usr/share/logstash/plugins/my-plugin/build.gradle
-COPY ../envsInstallationResources/Logstash8.16/rubyUtils.gradle /usr/share/rubyUtils.gradle
+COPY ../src/main/java/org/logstashplugins/settings.gradle /usr/share/logstash/plugins/my-plugin/settings.gradle
+COPY ../src/main/java/org/logstashplugins/build.gradle /usr/share/logstash/plugins/my-plugin/build.gradle
+COPY ../src/main/java/org/logstashplugins/rubyUtils.gradle /usr/share/rubyUtils.gradle
 
 # Download the versions.yml files
 RUN wget -O /usr/share/logstash/plugins/my-plugin/versions.yml https://raw.githubusercontent.com/elastic/logstash/main/versions.yml
@@ -72,7 +72,7 @@ RUN ls -l /usr/share/logstash/plugins/my-plugin/build/libs
 RUN /usr/share/logstash/bin/logstash-plugin install --no-verify --local /usr/share/logstash/plugins/my-plugin/logstash-output-microsoft_sentinel_output-0.1.0-java.gem
 
 # Copy the Logstash configuration file
-COPY ../envsInstallationResources/Logstash8.16/logstash.conf /usr/share/logstash/config/logstash.conf
+COPY ../src/main/java/org/logstashplugins/logstash.conf /usr/share/logstash/config/logstash.conf
 
 # Configure SSH
 RUN mkdir /var/run/sshd && \
