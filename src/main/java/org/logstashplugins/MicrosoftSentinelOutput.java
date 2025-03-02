@@ -12,7 +12,12 @@ import java.io.PrintStream;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
+
+import org.logstashplugins.LogAnalyticsEventsHandler.EventsHandler;
+import org.logstashplugins.LogAnalyticsEventsHandler.EventsHandlerConfiguration;
+import org.logstashplugins.LogAnalyticsEventsHandler.EventsHandlerEvent;
 
 // class name must match plugin name
 @LogstashPlugin(name = "microsoft_sentinel_output")
@@ -20,6 +25,19 @@ public class MicrosoftSentinelOutput implements Output {
 
     public static final PluginConfigSpec<String> PREFIX_CONFIG =
             PluginConfigSpec.stringSetting("prefix", "");
+    public static final PluginConfigSpec<String> DATA_COLLECTION_ENDPOINT_CONFIG = 
+            PluginConfigSpec.stringSetting("data_collection_endpoint", "");
+    public static final PluginConfigSpec<String> DCR_ID_CONFIG =
+            PluginConfigSpec.stringSetting("dcr_id", "");
+    public static final PluginConfigSpec<String> TABLE_NAME_CONFIG =
+            PluginConfigSpec.stringSetting("table_name", "");
+    public static final PluginConfigSpec<Long> MAX_EVENTS_PER_BATCH_CONFIG =
+            PluginConfigSpec.numSetting("max_events_per_batch", 10);
+    public static final PluginConfigSpec<Long> MAX_WAITING_TIME_SECONDS_CONFIG =
+            PluginConfigSpec.numSetting("max_waiting_time_seconds", 10);
+    public static final PluginConfigSpec<List<Object>> KEYS_TO_KEEP_CONFIG =
+            PluginConfigSpec.arraySetting("keys_to_keep");
+
 
     private final String id;
     private String prefix;
@@ -27,25 +45,46 @@ public class MicrosoftSentinelOutput implements Output {
     private final CountDownLatch done = new CountDownLatch(1);
     private volatile boolean stopped = false;
 
+    private EventsHandler eventsHandler;
+    private List<String> keysToKeep;
+
     // all plugins must provide a constructor that accepts id, Configuration, and Context
     public MicrosoftSentinelOutput(final String id, final Configuration configuration, final Context context) {
         this(id, configuration, context, System.out);
     }
 
+    @SuppressWarnings("unchecked")
     public MicrosoftSentinelOutput(final String id, final Configuration config, final Context context, OutputStream targetStream) {
         // constructors should validate configuration options
         this.id = id;
         prefix = config.get(PREFIX_CONFIG);
         printer = new PrintStream(targetStream);
+
+        EventsHandlerConfiguration eventsHandlerConfiguration = createEventsHandlerConfiguration(config);
+        keysToKeep = (List<String>) (List<?>) config.get(KEYS_TO_KEEP_CONFIG);
+
+        eventsHandler = new EventsHandler(eventsHandlerConfiguration);
     }
 
     @Override
     public void output(final Collection<Event> events) {
         Iterator<Event> z = events.iterator();
         while (z.hasNext() && !stopped) {
-            String s = prefix + z.next();
-            printer.println(s);
+            EventsHandlerEvent event = new EventsHandlerEvent(z.next().getData(), keysToKeep);
+            eventsHandler.handle(event);
         }
+    }
+
+    private EventsHandlerConfiguration createEventsHandlerConfiguration(Configuration config) {
+        EventsHandlerConfiguration eventsHandlerConfiguration = new EventsHandlerConfiguration();
+        // set all configuration options
+        eventsHandlerConfiguration.setDataCollectionEndpoint(config.get(DATA_COLLECTION_ENDPOINT_CONFIG));
+        eventsHandlerConfiguration.setDcrId(config.get(DCR_ID_CONFIG));
+        eventsHandlerConfiguration.setTableName(config.get(TABLE_NAME_CONFIG));
+        eventsHandlerConfiguration.setMaxEventsPerBatch(config.get(MAX_EVENTS_PER_BATCH_CONFIG).intValue());
+        eventsHandlerConfiguration.setMaxWaitingTimeSeconds(config.get(MAX_WAITING_TIME_SECONDS_CONFIG).intValue());
+
+        return eventsHandlerConfiguration;
     }
 
     @Override
