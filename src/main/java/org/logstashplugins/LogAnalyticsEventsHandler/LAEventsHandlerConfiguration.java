@@ -4,7 +4,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class EventsHandlerConfiguration {
+public class LAEventsHandlerConfiguration {
     private int maxWaitingTimeSeconds;
     private String dataCollectionEndpoint;
     private String dcrId;

@@ -15,9 +15,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import org.logstashplugins.LogAnalyticsEventsHandler.EventsHandler;
-import org.logstashplugins.LogAnalyticsEventsHandler.EventsHandlerConfiguration;
-import org.logstashplugins.LogAnalyticsEventsHandler.EventsHandlerEvent;
+import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandler;
+import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandlerConfiguration;
+import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandlerEvent;
+import org.logstashplugins.LogAnalyticsEventsHandler.LogstashLAHandlerEvent;
 
 // class name must match plugin name
 @LogstashPlugin(name = "microsoft_sentinel_output")
@@ -43,7 +44,7 @@ public class MicrosoftSentinelOutput implements Output {
     private final CountDownLatch done = new CountDownLatch(1);
     private volatile boolean stopped = false;
 
-    private EventsHandler eventsHandler;
+    private LAEventsHandler eventsHandler;
     private List<String> keysToKeep;
 
     // all plugins must provide a constructor that accepts id, Configuration, and Context
@@ -58,23 +59,23 @@ public class MicrosoftSentinelOutput implements Output {
         prefix = config.get(PREFIX_CONFIG);
         printer = new PrintStream(targetStream);
 
-        EventsHandlerConfiguration eventsHandlerConfiguration = createEventsHandlerConfiguration(config);
+        LAEventsHandlerConfiguration eventsHandlerConfiguration = createEventsHandlerConfiguration(config);
         keysToKeep = (List<String>) (List<?>) config.get(KEYS_TO_KEEP_CONFIG);
 
-        eventsHandler = new EventsHandler(eventsHandlerConfiguration);
+        eventsHandler = new LAEventsHandler(eventsHandlerConfiguration);
     }
 
     @Override
     public void output(final Collection<Event> events) {
         Iterator<Event> z = events.iterator();
         while (z.hasNext() && !stopped) {
-            EventsHandlerEvent event = new EventsHandlerEvent(z.next().getData(), keysToKeep);
+            LAEventsHandlerEvent event = new LogstashLAHandlerEvent(z.next().getData(), keysToKeep);
             eventsHandler.handle(event);
         }
     }
 
-    private EventsHandlerConfiguration createEventsHandlerConfiguration(Configuration config) {
-        EventsHandlerConfiguration eventsHandlerConfiguration = new EventsHandlerConfiguration();
+    private LAEventsHandlerConfiguration createEventsHandlerConfiguration(Configuration config) {
+        LAEventsHandlerConfiguration eventsHandlerConfiguration = new LAEventsHandlerConfiguration();
         // set all configuration options
         eventsHandlerConfiguration.setDataCollectionEndpoint(config.get(DATA_COLLECTION_ENDPOINT_CONFIG));
         eventsHandlerConfiguration.setDcrId(config.get(DCR_ID_CONFIG));

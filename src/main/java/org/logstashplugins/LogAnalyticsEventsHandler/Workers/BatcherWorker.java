@@ -5,17 +5,18 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.logstashplugins.LogAnalyticsEventsHandler.EventsHandlerConfiguration;
-import org.logstashplugins.LogAnalyticsEventsHandler.EventsHandlerEvent;
+import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandlerConfiguration;
+import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandlerEvent;
+import org.logstashplugins.LogAnalyticsEventsHandler.LogstashLAHandlerEvent;
 
-public class BatcherWorker extends AbstractWorker<EventsHandlerEvent> {
-    private BlockingQueue<EventsHandlerEvent> eventsQueue;
+public class BatcherWorker extends AbstractWorker<LogstashLAHandlerEvent> {
+    private BlockingQueue<LAEventsHandlerEvent> eventsQueue;
     private BlockingQueue<List<Object>> batchesQueue;
-    private EventsHandlerConfiguration configuration;
+    private LAEventsHandlerConfiguration configuration;
     
-    public BatcherWorker(BlockingQueue<EventsHandlerEvent> eventsQueue, 
+    public BatcherWorker(BlockingQueue<LAEventsHandlerEvent> eventsQueue, 
                         BlockingQueue<List<Object>> batchesQueue, 
-                        EventsHandlerConfiguration configuration) {
+                        LAEventsHandlerConfiguration configuration) {
         this.eventsQueue = eventsQueue; 
         this.batchesQueue = batchesQueue;
         this.configuration = configuration;
@@ -27,7 +28,7 @@ public class BatcherWorker extends AbstractWorker<EventsHandlerEvent> {
         List<Object> batch = new ArrayList<Object>();
         
         while (System.currentTimeMillis() - currentTimeMillis < configuration.getMaxWaitingTimeSeconds() * 1000) {
-            EventsHandlerEvent event = eventsQueue.poll(60, TimeUnit.SECONDS);
+            LAEventsHandlerEvent event = eventsQueue.poll(60, TimeUnit.SECONDS);
             if (event != null) {
                 batch.add(event.getLog());
             }

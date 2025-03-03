@@ -3,7 +3,7 @@ package org.logstashplugins.LogAnalyticsEventsHandler.Workers;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
-import org.logstashplugins.LogAnalyticsEventsHandler.EventsHandlerConfiguration;
+import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandlerConfiguration;
 
 import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.azure.monitor.ingestion.LogsIngestionClient;
@@ -12,11 +12,11 @@ import com.azure.monitor.ingestion.LogsIngestionClientBuilder;
 public class SenderWorker extends AbstractWorker<List<Object>> {
     private BlockingQueue<List<Object>> batchesQueue;
     private LogsIngestionClient client;
-    private EventsHandlerConfiguration configuration;
+    private LAEventsHandlerConfiguration configuration;
 
     public SenderWorker(BlockingQueue<List<Object>> batchesQueue, 
                         int initialDelaySeconds,
-                        EventsHandlerConfiguration configuration) {
+                        LAEventsHandlerConfiguration configuration) {
         this.batchesQueue = batchesQueue;
         this.client = new LogsIngestionClientBuilder()
                 .credential(new DefaultAzureCredentialBuilder().build())

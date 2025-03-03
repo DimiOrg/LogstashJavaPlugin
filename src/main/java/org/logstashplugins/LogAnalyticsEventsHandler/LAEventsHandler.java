@@ -7,13 +7,13 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.logstashplugins.LogAnalyticsEventsHandler.Workers.BatcherWorker;
 import org.logstashplugins.LogAnalyticsEventsHandler.Workers.SenderWorker;
 
-public class EventsHandler {
-    private EventsHandlerConfiguration configuration;
-    private BlockingQueue<EventsHandlerEvent> eventsQueue;
+public class LAEventsHandler {
+    private LAEventsHandlerConfiguration configuration;
+    private BlockingQueue<LAEventsHandlerEvent> eventsQueue;
     private BlockingQueue<List<Object>> batchesQueue;
 
-    public EventsHandler(EventsHandlerConfiguration configuration) {
-        eventsQueue = new LinkedBlockingQueue<EventsHandlerEvent>();
+    public LAEventsHandler(LAEventsHandlerConfiguration configuration) {
+        eventsQueue = new LinkedBlockingQueue<LAEventsHandlerEvent>();
         batchesQueue = new LinkedBlockingQueue<List<Object>>();
         this.configuration = configuration;
 
@@ -23,7 +23,7 @@ public class EventsHandler {
         }
     }
 
-    public void handle(EventsHandlerEvent event) {
+    public void handle(LAEventsHandlerEvent event) {
         eventsQueue.add(event);
     }
 }
