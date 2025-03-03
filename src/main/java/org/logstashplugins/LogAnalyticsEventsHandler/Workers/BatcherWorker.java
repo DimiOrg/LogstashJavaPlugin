@@ -23,15 +23,15 @@ public class BatcherWorker extends AbstractWorker<EventsHandlerEvent> {
 
     @Override
     public void process() throws InterruptedException {
-        int currentTimeMillis = (int) System.currentTimeMillis();
+        long currentTimeMillis = System.currentTimeMillis();
         List<Object> batch = new ArrayList<Object>();
         
-        while ((int) System.currentTimeMillis() - currentTimeMillis < configuration.getMaxWaitingTimeSeconds() * 1000) {
+        while (System.currentTimeMillis() - currentTimeMillis < configuration.getMaxWaitingTimeSeconds() * 1000) {
             EventsHandlerEvent event = eventsQueue.poll(60, TimeUnit.SECONDS);
             if (event != null) {
                 batch.add(event.getLog());
             }
-            currentTimeMillis = (int) System.currentTimeMillis();
+            currentTimeMillis = System.currentTimeMillis();
         }
 
         if (!batch.isEmpty()) {
