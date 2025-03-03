@@ -6,7 +6,6 @@ import lombok.Setter;
 @Setter
 public class EventsHandlerConfiguration {
     private int maxWaitingTimeSeconds;
-    private int maxEventsPerBatch;
     private String dataCollectionEndpoint;
     private String dcrId;
     private String tableName;
