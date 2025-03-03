@@ -31,8 +31,6 @@ public class MicrosoftSentinelOutput implements Output {
             PluginConfigSpec.stringSetting("dcr_id", "");
     public static final PluginConfigSpec<String> TABLE_NAME_CONFIG =
             PluginConfigSpec.stringSetting("table_name", "");
-    public static final PluginConfigSpec<Long> MAX_EVENTS_PER_BATCH_CONFIG =
-            PluginConfigSpec.numSetting("max_events_per_batch", 10);
     public static final PluginConfigSpec<Long> MAX_WAITING_TIME_SECONDS_CONFIG =
             PluginConfigSpec.numSetting("max_waiting_time_seconds", 10);
     public static final PluginConfigSpec<List<Object>> KEYS_TO_KEEP_CONFIG =
@@ -81,7 +79,6 @@ public class MicrosoftSentinelOutput implements Output {
         eventsHandlerConfiguration.setDataCollectionEndpoint(config.get(DATA_COLLECTION_ENDPOINT_CONFIG));
         eventsHandlerConfiguration.setDcrId(config.get(DCR_ID_CONFIG));
         eventsHandlerConfiguration.setTableName(config.get(TABLE_NAME_CONFIG));
-        eventsHandlerConfiguration.setMaxEventsPerBatch(config.get(MAX_EVENTS_PER_BATCH_CONFIG).intValue());
         eventsHandlerConfiguration.setMaxWaitingTimeSeconds(config.get(MAX_WAITING_TIME_SECONDS_CONFIG).intValue());
 
         return eventsHandlerConfiguration;
