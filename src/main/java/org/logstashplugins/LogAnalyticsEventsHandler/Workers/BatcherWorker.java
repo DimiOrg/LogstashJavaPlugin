@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.logstashplugins.LogstashLAHandlerEvent;
 import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandlerConfiguration;
 import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandlerEvent;
-import org.logstashplugins.LogAnalyticsEventsHandler.LogstashLAHandlerEvent;
 
 public class BatcherWorker extends AbstractWorker<LogstashLAHandlerEvent> {
     private BlockingQueue<LAEventsHandlerEvent> eventsQueue;

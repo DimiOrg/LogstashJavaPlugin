@@ -18,7 +18,6 @@ import java.util.concurrent.CountDownLatch;
 import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandler;
 import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandlerConfiguration;
 import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandlerEvent;
-import org.logstashplugins.LogAnalyticsEventsHandler.LogstashLAHandlerEvent;
 
 // class name must match plugin name
 @LogstashPlugin(name = "microsoft_sentinel_output")
