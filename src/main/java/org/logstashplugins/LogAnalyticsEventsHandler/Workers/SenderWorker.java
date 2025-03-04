@@ -4,8 +4,9 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandlerConfiguration;
+import org.logstashplugins.LogAnalyticsEventsHandler.TokenCredentialFactory;
 
-import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.azure.core.credential.TokenCredential;
 import com.azure.monitor.ingestion.LogsIngestionClient;
 import com.azure.monitor.ingestion.LogsIngestionClientBuilder;
 
@@ -17,12 +18,20 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
     public SenderWorker(BlockingQueue<List<Object>> batchesQueue, 
                         int initialDelaySeconds,
                         LAEventsHandlerConfiguration configuration) {
+        this.configuration = configuration;
         this.batchesQueue = batchesQueue;
+
+        TokenCredential tokenCredential = TokenCredentialFactory.createCredential(
+            configuration.getAuthenticationType(),
+            configuration.getClientId(),
+            configuration.getClientSecret(),
+            configuration.getTenantId()
+        );
         this.client = new LogsIngestionClientBuilder()
-                .credential(new DefaultAzureCredentialBuilder().build())
+                .credential(tokenCredential)
                 .endpoint(configuration.getDataCollectionEndpoint())
                 .buildClient();
-        this.configuration = configuration;
+
 
         //sleep for initialDelaySeconds before starting to process batches. Done in order to make senders start at different times.
         try {
