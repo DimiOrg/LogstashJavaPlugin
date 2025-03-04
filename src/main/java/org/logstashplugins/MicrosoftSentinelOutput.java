@@ -25,6 +25,8 @@ public class MicrosoftSentinelOutput implements Output {
 
     public static final PluginConfigSpec<String> PREFIX_CONFIG =
             PluginConfigSpec.stringSetting("prefix", "");
+
+    // Log Analytics configuration
     public static final PluginConfigSpec<String> DATA_COLLECTION_ENDPOINT_CONFIG = 
             PluginConfigSpec.stringSetting("data_collection_endpoint", "");
     public static final PluginConfigSpec<String> DCR_ID_CONFIG =
@@ -35,11 +37,19 @@ public class MicrosoftSentinelOutput implements Output {
             PluginConfigSpec.numSetting("max_waiting_time_seconds", 10);
     public static final PluginConfigSpec<List<Object>> KEYS_TO_KEEP_CONFIG =
             PluginConfigSpec.arraySetting("keys_to_keep");
+    
+    // Azure authentication
+    public static final PluginConfigSpec<String> AUTHENTICATION_TYPE_CONFIG =
+            PluginConfigSpec.stringSetting("authentication_type", "");
+    public static final PluginConfigSpec<String> CLIENT_ID_CONFIG =
+            PluginConfigSpec.stringSetting("client_id", "");
+    public static final PluginConfigSpec<String> CLIENT_SECRET_CONFIG =
+            PluginConfigSpec.stringSetting("client_secret", "");
+    public static final PluginConfigSpec<String> TENANT_ID_CONFIG =
+            PluginConfigSpec.stringSetting("tenant_id", "");
 
 
     private final String id;
-    private String prefix;
-    private PrintStream printer;
     private final CountDownLatch done = new CountDownLatch(1);
     private volatile boolean stopped = false;
 
@@ -55,8 +65,6 @@ public class MicrosoftSentinelOutput implements Output {
     public MicrosoftSentinelOutput(final String id, final Configuration config, final Context context, OutputStream targetStream) {
         // constructors should validate configuration options
         this.id = id;
-        prefix = config.get(PREFIX_CONFIG);
-        printer = new PrintStream(targetStream);
 
         LAEventsHandlerConfiguration eventsHandlerConfiguration = createEventsHandlerConfiguration(config);
         keysToKeep = (List<String>) (List<?>) config.get(KEYS_TO_KEEP_CONFIG);
