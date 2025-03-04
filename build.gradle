@@ -29,10 +29,24 @@ shadowJar {
 dependencies {
     implementation 'org.apache.logging.log4j:log4j-api:2.17.0'
     implementation fileTree(dir: "/usr/share/logstash", include: "**/logstash-core.jar")
+    // Include the Azure SDK BOM to manage dependency versions automatically
+    implementation platform('com.azure:azure-sdk-bom:1.2.7')
+
+    // Use Azure Monitor Ingestion SDK (version managed by BOM)
+    implementation 'com.azure:azure-monitor-ingestion:1.2.7'
+
+    // Azure Identity for authentication (version managed by BOM)
+    implementation 'com.azure:azure-identity'
+
+    // JSON Handling (Jackson)
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.jruby:jruby-complete:9.1.13.0'
     testImplementation 'org.apache.logging.log4j:log4j-core:2.9.1'
+
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
 
 clean {
