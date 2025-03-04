@@ -9,7 +9,8 @@
             "name": "Remote Debug Logstash",
             "request": "attach",
             "hostName": "localhost",
-            "port": 5005
+            "port": 5005,
+            "projectName": "LogstashJavaPlugin"
         }
     ]
 }

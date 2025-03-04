@@ -88,6 +88,10 @@ public class MicrosoftSentinelOutput implements Output {
         eventsHandlerConfiguration.setDcrId(config.get(DCR_ID_CONFIG));
         eventsHandlerConfiguration.setTableName(config.get(TABLE_NAME_CONFIG));
         eventsHandlerConfiguration.setMaxWaitingTimeSeconds(config.get(MAX_WAITING_TIME_SECONDS_CONFIG).intValue());
+        eventsHandlerConfiguration.setAuthenticationType(config.get(AUTHENTICATION_TYPE_CONFIG));
+        eventsHandlerConfiguration.setClientId(config.get(CLIENT_ID_CONFIG));   
+        eventsHandlerConfiguration.setClientSecret(config.get(CLIENT_SECRET_CONFIG));
+        eventsHandlerConfiguration.setTenantId(config.get(TENANT_ID_CONFIG));
 
         return eventsHandlerConfiguration;
     }
@@ -105,8 +109,17 @@ public class MicrosoftSentinelOutput implements Output {
 
     @Override
     public Collection<PluginConfigSpec<?>> configSchema() {
-        // should return a list of all configuration options for this plugin
-        return Collections.singletonList(PREFIX_CONFIG);
+        return List.of(
+            DATA_COLLECTION_ENDPOINT_CONFIG,
+            DCR_ID_CONFIG,
+            TABLE_NAME_CONFIG,
+            MAX_WAITING_TIME_SECONDS_CONFIG,
+            KEYS_TO_KEEP_CONFIG,
+            AUTHENTICATION_TYPE_CONFIG,
+            CLIENT_ID_CONFIG,
+            CLIENT_SECRET_CONFIG,
+            TENANT_ID_CONFIG
+        );
     }
 
     @Override

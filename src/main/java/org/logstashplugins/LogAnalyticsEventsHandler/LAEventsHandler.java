@@ -19,7 +19,7 @@ public class LAEventsHandler {
 
         for (int i = 0; i < 3; i++) {
             new Thread(new BatcherWorker(eventsQueue, batchesQueue, configuration)).start();
-            new Thread(new SenderWorker(batchesQueue, 1000 * i, configuration)).start();
+            new Thread(new SenderWorker(batchesQueue, i, configuration)).start();
         }
     }
 
