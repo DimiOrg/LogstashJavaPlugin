@@ -24,15 +24,14 @@ public class BatcherWorker extends AbstractWorker<LogstashLAHandlerEvent> {
 
     @Override
     public void process() throws InterruptedException {
-        long currentTimeMillis = System.currentTimeMillis();
+        long startTimeMillis = System.currentTimeMillis();
         List<Object> batch = new ArrayList<Object>();
         
-        while (System.currentTimeMillis() - currentTimeMillis < configuration.getMaxWaitingTimeSeconds() * 1000) {
-            LAEventsHandlerEvent event = eventsQueue.poll(60, TimeUnit.SECONDS);
+        while (System.currentTimeMillis() - startTimeMillis < configuration.getMaxWaitingTimeSeconds() * 1000) {
+            LAEventsHandlerEvent event = eventsQueue.poll(5, TimeUnit.SECONDS);
             if (event != null) {
                 batch.add(event.getLog());
             }
-            currentTimeMillis = System.currentTimeMillis();
         }
 
         if (!batch.isEmpty()) {

@@ -45,7 +45,13 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
     public void process() throws InterruptedException {
         while(!batchesQueue.isEmpty()) {
             List<Object> batch = batchesQueue.take();
-            client.upload(configuration.getDcrId(), configuration.getTableName(), batch);
+            try {
+                client.upload(configuration.getDcrId(), configuration.getStreamName(), batch);
+            } catch (Exception e) {
+                // supress exceptions for now. Didn't implement any error handling yet. Don't want the worker to stop.
+                e.printStackTrace();
+            }
+            
         }
     }
 }

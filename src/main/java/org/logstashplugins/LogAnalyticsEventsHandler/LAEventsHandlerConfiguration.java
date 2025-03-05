@@ -9,7 +9,7 @@ public class LAEventsHandlerConfiguration {
     private int maxWaitingTimeSeconds;
     private String dataCollectionEndpoint;
     private String dcrId;
-    private String tableName;
+    private String streamName;
 
     // Azure authentication
     private String authenticationType;

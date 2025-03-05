@@ -31,8 +31,8 @@ public class MicrosoftSentinelOutput implements Output {
             PluginConfigSpec.stringSetting("data_collection_endpoint", "");
     public static final PluginConfigSpec<String> DCR_ID_CONFIG =
             PluginConfigSpec.stringSetting("dcr_id", "");
-    public static final PluginConfigSpec<String> TABLE_NAME_CONFIG =
-            PluginConfigSpec.stringSetting("table_name", "");
+    public static final PluginConfigSpec<String> STREAM_NAME_CONFIG =
+            PluginConfigSpec.stringSetting("stream_name", "");
     public static final PluginConfigSpec<Long> MAX_WAITING_TIME_SECONDS_CONFIG =
             PluginConfigSpec.numSetting("max_waiting_time_seconds", 10);
     public static final PluginConfigSpec<List<Object>> KEYS_TO_KEEP_CONFIG =
@@ -86,7 +86,7 @@ public class MicrosoftSentinelOutput implements Output {
         // set all configuration options
         eventsHandlerConfiguration.setDataCollectionEndpoint(config.get(DATA_COLLECTION_ENDPOINT_CONFIG));
         eventsHandlerConfiguration.setDcrId(config.get(DCR_ID_CONFIG));
-        eventsHandlerConfiguration.setTableName(config.get(TABLE_NAME_CONFIG));
+        eventsHandlerConfiguration.setStreamName(config.get(STREAM_NAME_CONFIG));
         eventsHandlerConfiguration.setMaxWaitingTimeSeconds(config.get(MAX_WAITING_TIME_SECONDS_CONFIG).intValue());
         eventsHandlerConfiguration.setAuthenticationType(config.get(AUTHENTICATION_TYPE_CONFIG));
         eventsHandlerConfiguration.setClientId(config.get(CLIENT_ID_CONFIG));   
@@ -112,7 +112,7 @@ public class MicrosoftSentinelOutput implements Output {
         return List.of(
             DATA_COLLECTION_ENDPOINT_CONFIG,
             DCR_ID_CONFIG,
-            TABLE_NAME_CONFIG,
+            STREAM_NAME_CONFIG,
             MAX_WAITING_TIME_SECONDS_CONFIG,
             KEYS_TO_KEEP_CONFIG,
             AUTHENTICATION_TYPE_CONFIG,
