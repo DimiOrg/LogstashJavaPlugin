@@ -13,5 +13,6 @@
     }
   },
   "remoteUser": "root",
-  "postStartCommand": "./start-logstash-capture-pid.sh"
+  "postCreateCommand": "chmod +x scripts/update-logstash-plugin.sh",
+  "postStartCommand": "/usr/share/logstash/bin/logstash -f /usr/share/logstash/config/logstash.conf"
 }

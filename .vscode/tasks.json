@@ -2,9 +2,15 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Update Logstash Plugin",
+            "label": "Update and Start Logstash",
             "type": "shell",
-            "command": "./update-logstash-plugin.sh",
+            "command": "./scripts/update-logstash-plugin.sh",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            },
             "problemMatcher": []
         }
     ]
