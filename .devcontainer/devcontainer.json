@@ -13,5 +13,5 @@
     }
   },
   "remoteUser": "root",
-  "postStartCommand": "/usr/share/logstash/bin/logstash -f /usr/share/logstash/config/logstash.conf"
+  "postStartCommand": "./start-logstash-capture-pid.sh"
 }

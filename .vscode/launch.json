@@ -10,7 +10,8 @@
             "request": "attach",
             "hostName": "localhost",
             "port": 5005,
-            "projectName": "LogstashJavaPlugin"
+            "projectName": "LogstashJavaPlugin",
+            "preLaunchTask": "Update Logstash Plugin"
         }
     ]
 }

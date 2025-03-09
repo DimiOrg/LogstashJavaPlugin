@@ -1,0 +1,11 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Update Logstash Plugin",
+            "type": "shell",
+            "command": "./update-logstash-plugin.sh",
+            "problemMatcher": []
+        }
+    ]
+}
