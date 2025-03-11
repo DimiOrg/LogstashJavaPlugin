@@ -258,16 +258,21 @@ and we have this launch.json:
 "configurations": [
         {
             "type": "java",
-            "name": "Remote Debug Logstash",
+            "name": "Attach Remote Debugger (No Update)",
             "request": "attach",
             "hostName": "localhost",
-            "port": 5005
+            "port": 5005,
+            "projectName": "LogstashJavaPlugin"
         }
     ]
 ```
 so when we start a debug session, it connects to port 5005 and attached a remote debugger
 
 #### How to debug with new changes?
-If you made changes to the plugin and you want to debug the code after changes, you will have to rebuild the dev container. This is because currently the running Logstash process is running with the plugin that was installed during the container build.
-
-To rebuild the dev container: ctrl + shift + p --> Dev Containers: Rebuild Container
+If you made changes to the plugin and you want to debug the code after changes:
+### 1. Run the "Update and Start Logstash" Task:
+* Open the Terminal > Run Task menu in Visual Studio Code.
+* Select the "Update and Start Logstash" task.
+* This will update the plugin, restart Logstash, and keep it running in the background.
+### 2. Attach the Debugger:
+* Run > Debug
