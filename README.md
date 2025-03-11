@@ -238,15 +238,16 @@ Which will produce this content in the sample file:
 ```
 
 
-## How to Debug the Plugin
-To debug the plugin, follow these steps:
+## Debugging the Plugin
+### To debug the plugin, follow these steps:
 
-### 1. Open the Project in a Dev Container. (This dev container was tested on Visual Studio Code and Intellij Idea but should work on any other IDE with support)
+#### 1. Open the Project in a Dev Container. 
+* (This dev container was tested on Visual Studio Code and Intellij Idea but should work on any other IDE with support)
 
-### 2. Use the Debugger:
-You should be able to simple hit "Run -> Debug", the debugger will connect and you can put breakpoints in the plugin code.
+#### 2. Use the Debugger:
+* Simply hit "Run -> Debug", the debugger will connect and you can put breakpoints in the plugin code.
 
-#### How does this setup work?
+### How does this setup work?
  the dev container is built by the Dockerfile. in this Dockerfile we defined `ENV LS_JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"`. this makes every logstash process to run in debug mode and wait for a remote debugger on port 5005
 
 then in devcontainer.json we have this - 
@@ -268,11 +269,11 @@ and we have this launch.json:
 ```
 so when we start a debug session, it connects to port 5005 and attached a remote debugger
 
-#### How to debug with new changes?
+### How to debug with new changes?
 If you made changes to the plugin and you want to debug the code after changes:
-### 1. Run the "Update and Start Logstash" Task:
+#### 1. Run the "Update and Start Logstash" Task:
 * Open the Terminal > Run Task menu in Visual Studio Code.
 * Select the "Update and Start Logstash" task.
 * This will update the plugin, restart Logstash, and keep it running in the background.
-### 2. Attach the Debugger:
+#### 2. Attach the Debugger:
 * Run > Debug
