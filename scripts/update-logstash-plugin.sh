@@ -11,9 +11,10 @@ else
     echo "Logstash stopped."
 fi
 
-# Step 2: Copy the updated plugin code
+# Step 2: Copy the updated plugin code and logstash configuration
 echo "Copying updated plugin code..."
 cp -r src/main/java/org/logstashplugins /usr/share/logstash/plugins/my-plugin
+cp envsInstallationResources/Logstash8.16/logstash.conf /usr/share/logstash/config/logstash.conf
 
 # Step 3: Build the plugin
 echo "Building the plugin..."

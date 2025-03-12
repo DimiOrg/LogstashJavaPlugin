@@ -270,6 +270,7 @@ and we have this launch.json:
 so when we start a debug session, it connects to port 5005 and attached a remote debugger
 
 ### How to debug with new changes?
+Changes can be code under `src/main/java/org/logstashplugins` folder that got changed or changes to the logstash configuration in the file `envsInstallationResources/Logstash8.16/logstash.conf`.
 If you made changes to the plugin and you want to debug the code after changes:
 #### 1. Run the "Update and Start Logstash" Task:
 * Open the Terminal > Run Task menu in Visual Studio Code.
