@@ -36,7 +36,7 @@ public class LAEventsHandler {
         }
         for (int i = 0; i < senderWorkerCount; i++) {
             SenderWorker senderWorker = new SenderWorker(batchesQueue, configuration);
-            batchersExecutorService.scheduleAtFixedRate(senderWorker, i, 1, TimeUnit.MINUTES);
+            sendersExecutorService.scheduleAtFixedRate(senderWorker, i, 1, TimeUnit.MINUTES);
             workers.add(senderWorker);
         }
     }
