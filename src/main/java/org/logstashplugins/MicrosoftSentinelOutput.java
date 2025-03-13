@@ -18,11 +18,15 @@ import java.util.concurrent.CountDownLatch;
 import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandler;
 import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandlerConfiguration;
 import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandlerEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // class name must match plugin name
 @LogstashPlugin(name = "microsoft_sentinel_output")
 public class MicrosoftSentinelOutput implements Output {
 
+    private static final Logger logger = LoggerFactory.getLogger(MicrosoftSentinelOutput.class);
+    
     public static final PluginConfigSpec<String> PREFIX_CONFIG =
             PluginConfigSpec.stringSetting("prefix", "");
 
@@ -66,6 +70,7 @@ public class MicrosoftSentinelOutput implements Output {
         // constructors should validate configuration options
         this.id = id;
 
+        logger.info("Starting Microsoft Sentinel output plugin");
         LAEventsHandlerConfiguration eventsHandlerConfiguration = createEventsHandlerConfiguration(config);
         keysToKeep = (List<String>) (List<?>) config.get(KEYS_TO_KEEP_CONFIG);
 
@@ -98,8 +103,11 @@ public class MicrosoftSentinelOutput implements Output {
 
     @Override
     public void stop() {
+        logger.info("Stopping Microsoft Sentinel output plugin");
         stopped = true;
+        eventsHandler.shutdown();
         done.countDown();
+        logger.info("Microsoft Sentinel output plugin stopped");
     }
 
     @Override
