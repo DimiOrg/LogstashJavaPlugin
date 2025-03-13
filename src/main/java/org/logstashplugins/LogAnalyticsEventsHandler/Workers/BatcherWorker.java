@@ -16,7 +16,6 @@ public class BatcherWorker extends AbstractWorker<LogstashLAHandlerEvent> {
     private BlockingQueue<LAEventsHandlerEvent> eventsQueue;
     private BlockingQueue<List<Object>> batchesQueue;
     private LAEventsHandlerConfiguration configuration;
-    private boolean running;
     
     public BatcherWorker(BlockingQueue<LAEventsHandlerEvent> eventsQueue, 
                         BlockingQueue<List<Object>> batchesQueue, 

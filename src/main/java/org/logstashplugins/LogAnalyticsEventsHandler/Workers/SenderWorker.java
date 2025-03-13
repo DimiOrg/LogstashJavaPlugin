@@ -19,7 +19,6 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
     private BlockingQueue<List<Object>> batchesQueue;
     private LogsIngestionClient client;
     private LAEventsHandlerConfiguration configuration;
-    private boolean running;
     
     public SenderWorker(BlockingQueue<List<Object>> batchesQueue, 
                         LAEventsHandlerConfiguration configuration) {
