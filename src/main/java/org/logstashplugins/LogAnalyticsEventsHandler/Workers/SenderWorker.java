@@ -6,12 +6,16 @@ import java.util.concurrent.BlockingQueue;
 
 import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandlerConfiguration;
 import org.logstashplugins.LogAnalyticsEventsHandler.TokenCredentialFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.azure.core.credential.TokenCredential;
 import com.azure.monitor.ingestion.LogsIngestionClient;
 import com.azure.monitor.ingestion.LogsIngestionClientBuilder;
 
 public class SenderWorker extends AbstractWorker<List<Object>> {
+    private static final Logger logger = LoggerFactory.getLogger(SenderWorker.class);
+    
     private BlockingQueue<List<Object>> batchesQueue;
     private LogsIngestionClient client;
     private LAEventsHandlerConfiguration configuration;
@@ -51,14 +55,9 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
 
     @Override
     public void shutdown() {
-        running = false;
+        logger.info("Shutting down SenderWorker. Thread id: " + Thread.currentThread().getId());
 
-        // sleep for 5 seconds to allow the last batch to be sent
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+        running = false;
 
         // Get remaining batches and send them
         List<List<Object>> batches = new ArrayList<List<Object>>();
@@ -68,6 +67,8 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
                 client.upload(configuration.getDcrId(), configuration.getStreamName(), batch);
             }            
         }
+
+        logger.info("SenderWorker shutdown complete. Thread id: " + Thread.currentThread().getId());
     }
 
     @Override

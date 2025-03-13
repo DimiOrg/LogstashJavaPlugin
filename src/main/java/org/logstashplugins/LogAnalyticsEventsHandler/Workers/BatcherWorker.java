@@ -7,8 +7,12 @@ import java.util.concurrent.BlockingQueue;
 import org.logstashplugins.LogstashLAHandlerEvent;
 import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandlerConfiguration;
 import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandlerEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BatcherWorker extends AbstractWorker<LogstashLAHandlerEvent> {
+    private static final Logger logger = LoggerFactory.getLogger(BatcherWorker.class);
+    
     private BlockingQueue<LAEventsHandlerEvent> eventsQueue;
     private BlockingQueue<List<Object>> batchesQueue;
     private LAEventsHandlerConfiguration configuration;
@@ -40,14 +44,18 @@ public class BatcherWorker extends AbstractWorker<LogstashLAHandlerEvent> {
 
     @Override
     public void shutdown() {
+        logger.info("Shutting down BatcherWorker. Thread id: " + Thread.currentThread().getId());
+
         running = false;
 
         // Create one last batch with remaining events in the queue
         List<Object> batch = new ArrayList<Object>();
         eventsQueue.drainTo(batch);
         if (!batch.isEmpty()) {
+            logger.info("Adding last batch to queue. Batch size: " + batch.size());
             batchesQueue.add(batch);
         }
+        logger.info("BatcherWorker shutdown complete. Thread id: " + Thread.currentThread().getId());
     }
 
     @Override
