@@ -99,6 +99,7 @@ public class MicrosoftSentinelOutput implements Output {
     @Override
     public void stop() {
         stopped = true;
+        eventsHandler.shutdown();
         done.countDown();
     }
 

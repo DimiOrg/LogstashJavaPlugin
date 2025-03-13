@@ -1,5 +1,6 @@
 package org.logstashplugins.LogAnalyticsEventsHandler.Workers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
@@ -14,9 +15,9 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
     private BlockingQueue<List<Object>> batchesQueue;
     private LogsIngestionClient client;
     private LAEventsHandlerConfiguration configuration;
-
+    private boolean running;
+    
     public SenderWorker(BlockingQueue<List<Object>> batchesQueue, 
-                        int initialDelaySeconds,
                         LAEventsHandlerConfiguration configuration) {
         this.configuration = configuration;
         this.batchesQueue = batchesQueue;
@@ -31,27 +32,46 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
                 .credential(tokenCredential)
                 .endpoint(configuration.getDataCollectionEndpoint())
                 .buildClient();
-
-
-        //sleep for initialDelaySeconds before starting to process batches. Done in order to make senders start at different times.
-        try {
-            Thread.sleep(initialDelaySeconds * 1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        
+        this.running = true;
     }
 
     @Override
     public void process() throws InterruptedException {
-        while(!batchesQueue.isEmpty()) {
-            List<Object> batch = batchesQueue.take();
-            try {
-                client.upload(configuration.getDcrId(), configuration.getStreamName(), batch);
-            } catch (Exception e) {
-                // supress exceptions for now. Didn't implement any error handling yet. Don't want the worker to stop.
-                e.printStackTrace();
-            }
-            
+        while(running && !Thread.currentThread().isInterrupted() && !batchesQueue.isEmpty()) {
+            List<List<Object>> batches = new ArrayList<List<Object>>();
+            batchesQueue.drainTo(batches);
+            for(List<Object> batch : batches) {
+                if(batch != null) {
+                    client.upload(configuration.getDcrId(), configuration.getStreamName(), batch);
+                }            
+            }         
         }
+    }
+
+    @Override
+    public void shutdown() {
+        running = false;
+
+        // sleep for 5 seconds to allow the last batch to be sent
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        // Get remaining batches and send them
+        List<List<Object>> batches = new ArrayList<List<Object>>();
+        batchesQueue.drainTo(batches);
+        for(List<Object> batch : batches) {
+            if(batch != null) {
+                client.upload(configuration.getDcrId(), configuration.getStreamName(), batch);
+            }            
+        }
+    }
+
+    @Override
+    public boolean isRunning() {
+        return running;
     }
 }
