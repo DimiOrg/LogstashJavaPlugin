@@ -16,4 +16,7 @@ public class LAEventsHandlerConfiguration {
     private String clientId;
     private String clientSecret;
     private String tenantId;
+
+    // Shutdown configuration
+    private int maxGracefulShutdownTimeSeconds;
 }
