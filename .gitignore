@@ -18,3 +18,5 @@ out/
 Gemfile*
 gradle.properties
 *.hprof
+logs/
+./logs/*
