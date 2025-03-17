@@ -56,15 +56,14 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
         while(running && !Thread.currentThread().isInterrupted() && !batchesQueue.isEmpty()) {
             List<List<Object>> batches = new ArrayList<List<Object>>();
             batchesQueue.drainTo(batches);
-            for(List<Object> batch : batches) {
-                if(batch != null) {
-                    if (!uploadWithExpBackoffRetries(batch, configuration.getMaxRetriesNum(), configuration.getInitialWaitTimeSeconds())) {
-                        // If upload fails, write a log with the batch size and drop the batch. later on we will implement a DLQ
-                        logger.error("Failed to upload batch. Dropping batch. Batch size: " + batch.size());
-                    }            
-                }
-            }         
-        }
+            logger.debug("Sending " + batches.size() + " batches to Log Analytics");
+            for(List<Object> batch : batches) {         
+                if (!uploadWithExpBackoffRetries(batch, configuration.getMaxRetriesNum(), configuration.getInitialWaitTimeSeconds())) {
+                    // If upload fails, write a log with the batch size and drop the batch. later on we will implement a DLQ
+                    logger.error("Failed to upload batch. Dropping batch. Batch size: " + batch.size());
+                }            
+            }
+        }         
     }
 
     @Override
@@ -101,6 +100,7 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
     
         while (!success && retries < maxRetries) {
             try {
+                logger.debug("Uploading batch. Batch size: " + batch.size());
                 client.upload(configuration.getDcrId(), configuration.getStreamName(), batch);
                 success = true; // If upload is successful, exit the loop
             } catch (Exception e) {
@@ -111,6 +111,7 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
                 }
                 retries++;
                 if (retries < maxRetries) {
+                    logger.debug("Failed to upload batch. Retrying. retry number: " + retries);
                     try {
                         Thread.sleep(waitTime);
                     } catch (InterruptedException ie) {

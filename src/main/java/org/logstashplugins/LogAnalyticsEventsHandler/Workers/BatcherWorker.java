@@ -37,6 +37,7 @@ public class BatcherWorker extends AbstractWorker<LogstashLAHandlerEvent> {
         }
 
         if (!batch.isEmpty()) {
+            logger.debug("Adding batch to queue. Batch size: " + batch.size());
             batchesQueue.add(batch);
         }
     }
