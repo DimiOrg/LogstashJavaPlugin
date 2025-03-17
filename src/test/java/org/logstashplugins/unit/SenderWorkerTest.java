@@ -1,7 +1,6 @@
 package org.logstashplugins.unit;
 
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,15 +17,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.MockedStatic;
 
-import com.azure.core.credential.TokenCredential;
 import com.azure.core.exception.HttpResponseException;
 import com.azure.core.http.HttpResponse;
 import com.azure.monitor.ingestion.LogsIngestionClient;
 import com.azure.monitor.ingestion.models.LogsUploadException;
 import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandlerConfiguration;
-import org.logstashplugins.LogAnalyticsEventsHandler.TokenCredentialFactory;
 import org.logstashplugins.LogAnalyticsEventsHandler.Workers.SenderWorker;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,9 +30,6 @@ public class SenderWorkerTest {
 
     @Mock
     private LogsIngestionClient client;
-
-    @Mock
-    private TokenCredential tokenCredential;
 
     private BlockingQueue<List<Object>> batchesQueue;
     private SenderWorker senderWorker;
@@ -56,13 +49,8 @@ public class SenderWorkerTest {
         configuration.setTenantId("test-tenant-id");
         configuration.setDataCollectionEndpoint("https://test-endpoint");
 
-        // Mock the static method TokenCredentialFactory.createCredential
-        try (MockedStatic<TokenCredentialFactory> mockedStatic = mockStatic(TokenCredentialFactory.class)) {
-            mockedStatic.when(() -> TokenCredentialFactory.createCredential(anyString(), anyString(), anyString(), anyString())).thenReturn(tokenCredential);
-
-            // Initialize the SenderWorker with the real configuration and mock client
-            senderWorker = new SenderWorker(batchesQueue, configuration, client);
-        }
+        // Initialize the SenderWorker with the real configuration and mock client
+        senderWorker = new SenderWorker(batchesQueue, configuration, client);
     }
 
     @Test
@@ -81,7 +69,7 @@ public class SenderWorkerTest {
         // The client should be called twice for both batches
         verify(client, times(2)).upload(eq("test-dcr-id"), eq("test-stream-name"), anyList());
     }
-    
+
     @Test
     public void testShutdown() throws Exception {
         List<Object> batch1 = Arrays.asList(new Object());
