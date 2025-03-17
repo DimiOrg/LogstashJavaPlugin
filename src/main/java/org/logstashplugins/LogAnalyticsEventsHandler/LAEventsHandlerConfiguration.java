@@ -5,13 +5,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LAEventsHandlerConfiguration {
-    private SenderWorker senderWorker = new SenderWorker();
-    private BatcherWorker batcherWorker = new BatcherWorker();
-    private LAEventsHandler laEventsHandler = new LAEventsHandler();
+    private SenderWorkerConfig senderWorkerConfig = new SenderWorkerConfig();
+    private BatcherWorkerConfig batcherWorkerConfig = new BatcherWorkerConfig();
+    private LAEventsHandlerConfig laEventsHandlerConfig = new LAEventsHandlerConfig();
 
     @Getter
     @Setter
-    public static class SenderWorker {
+    public static class SenderWorkerConfig {
         private String dataCollectionEndpoint;
         private String dcrId;
         private String streamName;
@@ -25,13 +25,13 @@ public class LAEventsHandlerConfiguration {
     
     @Getter
     @Setter
-    public static class BatcherWorker {
+    public static class BatcherWorkerConfig {
         private int maxWaitingTimeSecondsForBatch;
     }
     
     @Getter
     @Setter
-    public static class LAEventsHandler {
+    public static class LAEventsHandlerConfig {
         private int maxGracefulShutdownTimeSeconds;
     }
 }

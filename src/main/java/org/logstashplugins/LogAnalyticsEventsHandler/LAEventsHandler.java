@@ -39,12 +39,12 @@ public class LAEventsHandler {
         
         // Start batcher workers and sender workers. The ScheduledExecutorService will make sure that terminated workers are restarted.
         for (int i = 0; i < batcherWorkerCount; i++) {
-            BatcherWorker batcherWorker = new BatcherWorker(eventsQueue, batchesQueue, configuration.getBatcherWorker());
+            BatcherWorker batcherWorker = new BatcherWorker(eventsQueue, batchesQueue, configuration.getBatcherWorkerConfig());
             batchersExecutorService.scheduleAtFixedRate(batcherWorker, 0, 1, TimeUnit.MINUTES);
             batcherWorkers.add(batcherWorker);
         }
         for (int i = 0; i < senderWorkerCount; i++) {
-            SenderWorker senderWorker = new SenderWorker(batchesQueue, configuration.getSenderWorker());
+            SenderWorker senderWorker = new SenderWorker(batchesQueue, configuration.getSenderWorkerConfig());
             sendersExecutorService.scheduleAtFixedRate(senderWorker, i, 1, TimeUnit.MINUTES);
             senderWorkers.add(senderWorker);
         }
@@ -59,7 +59,7 @@ public class LAEventsHandler {
 
     public void shutdown() {
         logger.info("Shutting down Log Analytics Events Handler");
-        int shutdownTimeSeconds = Optional.ofNullable(configuration.getLaEventsHandler().getMaxGracefulShutdownTimeSeconds())
+        int shutdownTimeSeconds = Optional.ofNullable(configuration.getLaEventsHandlerConfig().getMaxGracefulShutdownTimeSeconds())
                            .filter(time -> time != 0)
                            .orElse(60);
         double batchersToSendersRatio = (double) batcherWorkers.size() / senderWorkers.size();

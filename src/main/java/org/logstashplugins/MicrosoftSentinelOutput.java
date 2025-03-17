@@ -90,17 +90,17 @@ public class MicrosoftSentinelOutput implements Output {
     private LAEventsHandlerConfiguration createEventsHandlerConfiguration(Configuration config) {
         LAEventsHandlerConfiguration eventsHandlerConfiguration = new LAEventsHandlerConfiguration();
         // set all configuration options
-        eventsHandlerConfiguration.getSenderWorker().setDataCollectionEndpoint(config.get(DATA_COLLECTION_ENDPOINT_CONFIG));
-        eventsHandlerConfiguration.getSenderWorker().setDcrId(config.get(DCR_ID_CONFIG));
-        eventsHandlerConfiguration.getSenderWorker().setStreamName(config.get(STREAM_NAME_CONFIG));
-        eventsHandlerConfiguration.getSenderWorker().setAuthenticationType(config.get(AUTHENTICATION_TYPE_CONFIG));
-        eventsHandlerConfiguration.getSenderWorker().setClientId(config.get(CLIENT_ID_CONFIG));   
-        eventsHandlerConfiguration.getSenderWorker().setClientSecret(config.get(CLIENT_SECRET_CONFIG));
-        eventsHandlerConfiguration.getSenderWorker().setTenantId(config.get(TENANT_ID_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setDataCollectionEndpoint(config.get(DATA_COLLECTION_ENDPOINT_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setDcrId(config.get(DCR_ID_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setStreamName(config.get(STREAM_NAME_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setAuthenticationType(config.get(AUTHENTICATION_TYPE_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setClientId(config.get(CLIENT_ID_CONFIG));   
+        eventsHandlerConfiguration.getSenderWorkerConfig().setClientSecret(config.get(CLIENT_SECRET_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setTenantId(config.get(TENANT_ID_CONFIG));
 
-        eventsHandlerConfiguration.getBatcherWorker().setMaxWaitingTimeSecondsForBatch(config.get(MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG).intValue());
+        eventsHandlerConfiguration.getBatcherWorkerConfig().setMaxWaitingTimeSecondsForBatch(config.get(MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG).intValue());
 
-        eventsHandlerConfiguration.getLaEventsHandler().setMaxGracefulShutdownTimeSeconds(config.get(MAX_GRACEFUL_SHUTDOWN_TIME_SECONDS_CONFIG).intValue());
+        eventsHandlerConfiguration.getLaEventsHandlerConfig().setMaxGracefulShutdownTimeSeconds(config.get(MAX_GRACEFUL_SHUTDOWN_TIME_SECONDS_CONFIG).intValue());
 
         return eventsHandlerConfiguration;
     }

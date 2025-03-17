@@ -20,10 +20,10 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
     
     private BlockingQueue<List<Object>> batchesQueue;
     private LogsIngestionClient client;
-    private LAEventsHandlerConfiguration.SenderWorker configuration;
+    private LAEventsHandlerConfiguration.SenderWorkerConfig configuration;
     
     public SenderWorker(BlockingQueue<List<Object>> batchesQueue, 
-                        LAEventsHandlerConfiguration.SenderWorker configuration) {
+                        LAEventsHandlerConfiguration.SenderWorkerConfig configuration) {
         this.configuration = configuration;
         this.batchesQueue = batchesQueue;
 
@@ -43,7 +43,7 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
 
     // contructor for testing
     public SenderWorker(BlockingQueue<List<Object>> batchesQueue, 
-                        LAEventsHandlerConfiguration.SenderWorker configuration,
+                        LAEventsHandlerConfiguration.SenderWorkerConfig configuration,
                         LogsIngestionClient client) {
         this.configuration = configuration;
         this.batchesQueue = batchesQueue;
