@@ -33,12 +33,12 @@ public class SenderWorkerTest {
 
     private BlockingQueue<List<Object>> batchesQueue;
     private SenderWorker senderWorker;
-    private LAEventsHandlerConfiguration configuration;
+    private LAEventsHandlerConfiguration.SenderWorker configuration;
 
     @BeforeEach
     public void setUp() {
         batchesQueue = new LinkedBlockingQueue<>();
-        configuration = new LAEventsHandlerConfiguration();
+        configuration = new LAEventsHandlerConfiguration.SenderWorker();
         configuration.setDcrId("test-dcr-id");
         configuration.setStreamName("test-stream-name");
         configuration.setMaxRetriesNum(3);

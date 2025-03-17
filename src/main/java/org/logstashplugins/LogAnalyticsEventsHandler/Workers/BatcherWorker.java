@@ -15,11 +15,11 @@ public class BatcherWorker extends AbstractWorker<LogstashLAHandlerEvent> {
     
     private BlockingQueue<LAEventsHandlerEvent> eventsQueue;
     private BlockingQueue<List<Object>> batchesQueue;
-    private LAEventsHandlerConfiguration configuration;
+    private LAEventsHandlerConfiguration.BatcherWorker configuration;
     
     public BatcherWorker(BlockingQueue<LAEventsHandlerEvent> eventsQueue, 
                         BlockingQueue<List<Object>> batchesQueue, 
-                        LAEventsHandlerConfiguration configuration) {
+                        LAEventsHandlerConfiguration.BatcherWorker configuration) {
         this.eventsQueue = eventsQueue; 
         this.batchesQueue = batchesQueue;
         this.configuration = configuration;
