@@ -1,2 +1,0 @@
-2025-03-17 07:28:31 ERROR o.l.L.Workers.SenderWorker - Failed to upload batch. Exception is non retryable
-com.azure.monitor.ingestion.models.LogsUploadException: null
