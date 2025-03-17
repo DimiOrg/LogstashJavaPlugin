@@ -2,9 +2,9 @@ package org.logstashplugins.unit;
 
 import co.elastic.logstash.api.Configuration;
 import co.elastic.logstash.api.Event;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.logstash.plugins.ConfigurationImpl;
 import org.logstashplugins.MicrosoftSentinelOutput;
 
@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class MicrosoftSentinelOutputTest {
 
-    @Ignore
+    @Disabled
     @Test
     public void testMicrosoftSentinelOutput() {
         String prefix = "Prefix";
@@ -42,9 +42,9 @@ public class MicrosoftSentinelOutputTest {
         int lastIndex = 0;
         while (index < eventCount) {
             lastIndex = outputString.indexOf(prefix, lastIndex);
-            Assert.assertTrue("Prefix should exist in output string", lastIndex > -1);
+            Assertions.assertTrue(lastIndex > -1, "Prefix should exist in output string");
             lastIndex = outputString.indexOf("message " + index);
-            Assert.assertTrue("Message should exist in output string", lastIndex > -1);
+            Assertions.assertTrue(lastIndex > -1, "Message should exist in output string");
             index++;
         }
     }

@@ -8,9 +8,7 @@ import co.elastic.logstash.api.Output;
 import co.elastic.logstash.api.PluginConfigSpec;
 
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -92,7 +90,7 @@ public class MicrosoftSentinelOutput implements Output {
         eventsHandlerConfiguration.setDataCollectionEndpoint(config.get(DATA_COLLECTION_ENDPOINT_CONFIG));
         eventsHandlerConfiguration.setDcrId(config.get(DCR_ID_CONFIG));
         eventsHandlerConfiguration.setStreamName(config.get(STREAM_NAME_CONFIG));
-        eventsHandlerConfiguration.setMaxWaitingTimeSeconds(config.get(MAX_WAITING_TIME_SECONDS_CONFIG).intValue());
+        eventsHandlerConfiguration.setMaxWaitingTimeSecondsForBatch(config.get(MAX_WAITING_TIME_SECONDS_CONFIG).intValue());
         eventsHandlerConfiguration.setAuthenticationType(config.get(AUTHENTICATION_TYPE_CONFIG));
         eventsHandlerConfiguration.setClientId(config.get(CLIENT_ID_CONFIG));   
         eventsHandlerConfiguration.setClientSecret(config.get(CLIENT_SECRET_CONFIG));

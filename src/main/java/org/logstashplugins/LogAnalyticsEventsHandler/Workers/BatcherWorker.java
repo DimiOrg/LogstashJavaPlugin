@@ -32,7 +32,7 @@ public class BatcherWorker extends AbstractWorker<LogstashLAHandlerEvent> {
         List<Object> batch = new ArrayList<Object>();
         
         while (running && !Thread.currentThread().isInterrupted() && 
-                System.currentTimeMillis() - startTimeMillis < configuration.getMaxWaitingTimeSeconds() * 1000) {
+                System.currentTimeMillis() - startTimeMillis < configuration.getMaxWaitingTimeSecondsForBatch() * 1000) {
             eventsQueue.drainTo(batch);
         }
 

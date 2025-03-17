@@ -5,11 +5,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LAEventsHandlerConfiguration {
-    // Log Analytics
-    private int maxWaitingTimeSeconds;
+    // SenderWorker
     private String dataCollectionEndpoint;
     private String dcrId;
     private String streamName;
+    private int maxRetriesNum;
+    private int initialWaitTimeSeconds;
+
+    // BatcherWorker
+    private int maxWaitingTimeSecondsForBatch;
 
     // Azure authentication
     private String authenticationType;
