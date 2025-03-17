@@ -1,5 +1,8 @@
 package org.logstashplugins.unit;
 
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -63,6 +66,43 @@ public class SenderWorkerTest {
     }
 
     @Test
+    public void testProcess() throws InterruptedException {
+        List<Object> batch1 = Arrays.asList(new Object());
+        List<Object> batch2 = Arrays.asList(new Object());
+        batchesQueue.add(batch1);
+        batchesQueue.add(batch2);
+
+        // Mock the client to succeed on both uploads
+        doNothing().when(client).upload(eq("test-dcr-id"), eq("test-stream-name"), anyList());
+
+        // Call the process method
+        senderWorker.process();
+
+        // The client should be called twice for both batches
+        verify(client, times(2)).upload(eq("test-dcr-id"), eq("test-stream-name"), anyList());
+    }
+    
+    @Test
+    public void testShutdown() throws Exception {
+        List<Object> batch1 = Arrays.asList(new Object());
+        List<Object> batch2 = Arrays.asList(new Object());
+        batchesQueue.add(batch1);
+        batchesQueue.add(batch2);
+    
+        // Mock the client to succeed on both uploads
+        doNothing().when(client).upload(eq("test-dcr-id"), eq("test-stream-name"), anyList());
+    
+        // Call the shutdown method
+        senderWorker.shutdown();
+    
+        // Verify that the client was called for each batch in the queue
+        verify(client, times(2)).upload(eq("test-dcr-id"), eq("test-stream-name"), anyList());
+    
+        // Verify that isRunning() returns false after shutdown
+        assertFalse(senderWorker.isRunning());
+    }
+
+    @Test
     public void testUploadWithExpBackoffRetries_RetryableException() throws Exception {
         List<Object> batch = Arrays.asList(new Object());
         batchesQueue.add(batch);
@@ -114,6 +154,53 @@ public class SenderWorkerTest {
         boolean result = (boolean) method.invoke(senderWorker, batch, 3, 1);
 
         // since the exception is non-retryable, no retries should be done. the client should be called only once and the method should return false
+        verify(client, times(1)).upload(eq("test-dcr-id"), eq("test-stream-name"), anyList());
+        assertFalse(result);
+    }
+
+    @Test
+    public void testUploadWithExpBackoffRetries_SuccessfulUpload() throws Exception {
+        List<Object> batch = Arrays.asList(new Object());
+        batchesQueue.add(batch);
+
+        // Mock the client to succeed on the first attempt
+        doNothing().when(client).upload(eq("test-dcr-id"), eq("test-stream-name"), anyList());
+
+        // Call the private method uploadWithExpBackoffRetries using reflection
+        Method method = SenderWorker.class.getDeclaredMethod("uploadWithExpBackoffRetries", List.class, int.class, long.class);
+        method.setAccessible(true);
+        boolean result = (boolean) method.invoke(senderWorker, batch, 3, 1);
+
+        // The client should be called only once and the method should return true
+        verify(client, times(1)).upload(eq("test-dcr-id"), eq("test-stream-name"), anyList());
+        assertTrue(result);
+    }
+
+    @Test
+    public void testUploadWithExpBackoffRetries_InterruptedException() throws Exception {
+        List<Object> batch = Arrays.asList(new Object());
+        batchesQueue.add(batch);
+
+        // Create a LogsUploadException mock that has a retryable exception
+        HttpResponseException httpException = mock(HttpResponseException.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        when(httpResponse.getStatusCode()).thenReturn(500);
+        when(httpException.getResponse()).thenReturn(httpResponse);
+        LogsUploadException logsUploadException = mock(LogsUploadException.class);
+        when(logsUploadException.getLogsUploadErrors()).thenReturn(Arrays.asList(httpException));
+
+        // Mock the client to throw the exception
+        doThrow(logsUploadException).when(client).upload(eq("test-dcr-id"), eq("test-stream-name"), anyList());
+
+        // Interrupt the thread during the sleep
+        Thread.currentThread().interrupt();
+
+        // Call the private method uploadWithExpBackoffRetries using reflection
+        Method method = SenderWorker.class.getDeclaredMethod("uploadWithExpBackoffRetries", List.class, int.class, long.class);
+        method.setAccessible(true);
+        boolean result = (boolean) method.invoke(senderWorker, batch, 3, 1);
+
+        // The client should be called only once and the method should return false due to interruption
         verify(client, times(1)).upload(eq("test-dcr-id"), eq("test-stream-name"), anyList());
         assertFalse(result);
     }
