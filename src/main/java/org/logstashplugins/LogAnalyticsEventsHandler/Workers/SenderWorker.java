@@ -120,7 +120,7 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
                     waitTime *= 2; // Exponential backoff
                 } else {
                     // Handle the failure after max retries
-                    System.err.println("Failed to upload batch after " + maxRetries + " attempts");
+                    logger.error("Failed to upload batch after " + maxRetries + " attempts");
                 }
             }
         }
