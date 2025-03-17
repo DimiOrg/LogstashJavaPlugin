@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.MockedStatic;
 
 import com.azure.core.credential.TokenCredential;
 import com.azure.core.exception.HttpResponseException;
@@ -53,11 +54,12 @@ public class SenderWorkerTest {
         configuration.setDataCollectionEndpoint("https://test-endpoint");
 
         // Mock the static method TokenCredentialFactory.createCredential
-        mockStatic(TokenCredentialFactory.class);
-        when(TokenCredentialFactory.createCredential(anyString(), anyString(), anyString(), anyString())).thenReturn(tokenCredential);
+        try (MockedStatic<TokenCredentialFactory> mockedStatic = mockStatic(TokenCredentialFactory.class)) {
+            mockedStatic.when(() -> TokenCredentialFactory.createCredential(anyString(), anyString(), anyString(), anyString())).thenReturn(tokenCredential);
 
-        // Initialize the SenderWorker with the real configuration and mock client
-        senderWorker = new SenderWorker(batchesQueue, configuration, client);
+            // Initialize the SenderWorker with the real configuration and mock client
+            senderWorker = new SenderWorker(batchesQueue, configuration, client);
+        }
     }
 
     @Test
