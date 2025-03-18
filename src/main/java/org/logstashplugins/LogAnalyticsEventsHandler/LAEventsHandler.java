@@ -35,26 +35,31 @@ public class LAEventsHandler {
         batcherWorkers = new HashSet<>();
         senderWorkers = new HashSet<>();
 
+        logger.info("Starting Log Analytics Events Handler with {} batcher workers and {} sender workers", batcherWorkerCount, senderWorkerCount);
+        
         // Start batcher workers and sender workers. The ScheduledExecutorService will make sure that terminated workers are restarted.
         for (int i = 0; i < batcherWorkerCount; i++) {
-            BatcherWorker batcherWorker = new BatcherWorker(eventsQueue, batchesQueue, configuration);
+            BatcherWorker batcherWorker = new BatcherWorker(eventsQueue, batchesQueue, configuration.getBatcherWorkerConfig());
             batchersExecutorService.scheduleAtFixedRate(batcherWorker, 0, 1, TimeUnit.MINUTES);
             batcherWorkers.add(batcherWorker);
         }
         for (int i = 0; i < senderWorkerCount; i++) {
-            SenderWorker senderWorker = new SenderWorker(batchesQueue, configuration);
+            SenderWorker senderWorker = new SenderWorker(batchesQueue, configuration.getSenderWorkerConfig());
             sendersExecutorService.scheduleAtFixedRate(senderWorker, i, 1, TimeUnit.MINUTES);
             senderWorkers.add(senderWorker);
         }
+
+        logger.info("Log Analytics Events Handler has been started");
     }
 
     public void handle(LAEventsHandlerEvent event) {
+        logger.debug("Events queue size: {}", eventsQueue.size());
         eventsQueue.add(event);
     }
 
     public void shutdown() {
         logger.info("Shutting down Log Analytics Events Handler");
-        int shutdownTimeSeconds = Optional.ofNullable(configuration.getMaxGracefulShutdownTimeSeconds())
+        int shutdownTimeSeconds = Optional.ofNullable(configuration.getLaEventsHandlerConfig().getMaxGracefulShutdownTimeSeconds())
                            .filter(time -> time != 0)
                            .orElse(60);
         double batchersToSendersRatio = (double) batcherWorkers.size() / senderWorkers.size();
@@ -86,6 +91,19 @@ public class LAEventsHandler {
             Thread.currentThread().interrupt();
         }
         logger.info("Log Analytics Events Handler has been shut down");
+        for (BatcherWorker batcherWorker : batcherWorkers) {
+            if (batcherWorker.isRunning()) {
+                logger.warn("Batcher worker is still running");
+            }
+        }
+        for (SenderWorker senderWorker : senderWorkers) {
+            if (senderWorker.isRunning()) {
+                logger.warn("Sender worker is still running");
+            }
+        }
+
+        logger.debug("Events queue size: {}", eventsQueue.size());
+        logger.debug("Batches queue size: {}", batchesQueue.size());
     }
 
     private void shutdownWorkersConcurrently(Set<? extends Worker> workers, int maxGracefulShutdownTimeSeconds) {

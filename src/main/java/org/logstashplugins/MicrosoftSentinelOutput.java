@@ -8,9 +8,7 @@ import co.elastic.logstash.api.Output;
 import co.elastic.logstash.api.PluginConfigSpec;
 
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -37,8 +35,8 @@ public class MicrosoftSentinelOutput implements Output {
             PluginConfigSpec.stringSetting("dcr_id", "");
     public static final PluginConfigSpec<String> STREAM_NAME_CONFIG =
             PluginConfigSpec.stringSetting("stream_name", "");
-    public static final PluginConfigSpec<Long> MAX_WAITING_TIME_SECONDS_CONFIG =
-            PluginConfigSpec.numSetting("max_waiting_time_seconds", 10);
+    public static final PluginConfigSpec<Long> MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG =
+            PluginConfigSpec.numSetting("max_waiting_time_for_batch_seconds", 10);
     public static final PluginConfigSpec<List<Object>> KEYS_TO_KEEP_CONFIG =
             PluginConfigSpec.arraySetting("keys_to_keep");
     
@@ -52,6 +50,8 @@ public class MicrosoftSentinelOutput implements Output {
     public static final PluginConfigSpec<String> TENANT_ID_CONFIG =
             PluginConfigSpec.stringSetting("tenant_id", "");
 
+    public static final PluginConfigSpec<Long> MAX_GRACEFUL_SHUTDOWN_TIME_SECONDS_CONFIG =
+            PluginConfigSpec.numSetting("max_graceful_shutdown_time_seconds", 60);
 
     private final String id;
     private final CountDownLatch done = new CountDownLatch(1);
@@ -82,6 +82,7 @@ public class MicrosoftSentinelOutput implements Output {
         Iterator<Event> z = events.iterator();
         while (z.hasNext() && !stopped) {
             LAEventsHandlerEvent event = new LogstashLAHandlerEvent(z.next().getData(), keysToKeep);
+            logger.debug("Handling event: {}", event.toString());
             eventsHandler.handle(event);
         }
     }
@@ -89,14 +90,17 @@ public class MicrosoftSentinelOutput implements Output {
     private LAEventsHandlerConfiguration createEventsHandlerConfiguration(Configuration config) {
         LAEventsHandlerConfiguration eventsHandlerConfiguration = new LAEventsHandlerConfiguration();
         // set all configuration options
-        eventsHandlerConfiguration.setDataCollectionEndpoint(config.get(DATA_COLLECTION_ENDPOINT_CONFIG));
-        eventsHandlerConfiguration.setDcrId(config.get(DCR_ID_CONFIG));
-        eventsHandlerConfiguration.setStreamName(config.get(STREAM_NAME_CONFIG));
-        eventsHandlerConfiguration.setMaxWaitingTimeSeconds(config.get(MAX_WAITING_TIME_SECONDS_CONFIG).intValue());
-        eventsHandlerConfiguration.setAuthenticationType(config.get(AUTHENTICATION_TYPE_CONFIG));
-        eventsHandlerConfiguration.setClientId(config.get(CLIENT_ID_CONFIG));   
-        eventsHandlerConfiguration.setClientSecret(config.get(CLIENT_SECRET_CONFIG));
-        eventsHandlerConfiguration.setTenantId(config.get(TENANT_ID_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setDataCollectionEndpoint(config.get(DATA_COLLECTION_ENDPOINT_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setDcrId(config.get(DCR_ID_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setStreamName(config.get(STREAM_NAME_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setAuthenticationType(config.get(AUTHENTICATION_TYPE_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setClientId(config.get(CLIENT_ID_CONFIG));   
+        eventsHandlerConfiguration.getSenderWorkerConfig().setClientSecret(config.get(CLIENT_SECRET_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setTenantId(config.get(TENANT_ID_CONFIG));
+
+        eventsHandlerConfiguration.getBatcherWorkerConfig().setMaxWaitingTimeSecondsForBatch(config.get(MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG).intValue());
+
+        eventsHandlerConfiguration.getLaEventsHandlerConfig().setMaxGracefulShutdownTimeSeconds(config.get(MAX_GRACEFUL_SHUTDOWN_TIME_SECONDS_CONFIG).intValue());
 
         return eventsHandlerConfiguration;
     }
@@ -121,12 +125,14 @@ public class MicrosoftSentinelOutput implements Output {
             DATA_COLLECTION_ENDPOINT_CONFIG,
             DCR_ID_CONFIG,
             STREAM_NAME_CONFIG,
-            MAX_WAITING_TIME_SECONDS_CONFIG,
+            MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG,
             KEYS_TO_KEEP_CONFIG,
             AUTHENTICATION_TYPE_CONFIG,
             CLIENT_ID_CONFIG,
             CLIENT_SECRET_CONFIG,
-            TENANT_ID_CONFIG
+            TENANT_ID_CONFIG,
+            MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG,
+            MAX_GRACEFUL_SHUTDOWN_TIME_SECONDS_CONFIG
         );
     }
 

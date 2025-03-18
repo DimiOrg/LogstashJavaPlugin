@@ -41,7 +41,6 @@ dependencies {
     // JSON Handling (Jackson)
     implementation 'com.fasterxml.jackson.core:jackson-databind'
 
-    testImplementation 'junit:junit:4.12'
     testImplementation 'org.jruby:jruby-complete:9.1.13.0'
     testImplementation 'org.apache.logging.log4j:log4j-core:2.9.1'
 
@@ -52,6 +51,21 @@ dependencies {
     implementation 'org.slf4j:slf4j-api:1.7.30'
     implementation 'ch.qos.logback:logback-classic:1.2.3'
     
+    // JUnit 5 dependencies
+    testImplementation 'org.junit.platform:junit-platform-launcher:1.9.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+
+    // Mockito (testing framework)
+    testImplementation 'org.mockito:mockito-core:4.8.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:4.8.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+    testImplementation 'org.mockito:mockito-inline:4.8.0'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 clean {

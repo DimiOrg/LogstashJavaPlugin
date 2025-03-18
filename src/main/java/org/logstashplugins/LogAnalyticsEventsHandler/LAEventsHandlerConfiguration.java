@@ -5,18 +5,33 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LAEventsHandlerConfiguration {
-    // Log Analytics
-    private int maxWaitingTimeSeconds;
-    private String dataCollectionEndpoint;
-    private String dcrId;
-    private String streamName;
+    private SenderWorkerConfig senderWorkerConfig = new SenderWorkerConfig();
+    private BatcherWorkerConfig batcherWorkerConfig = new BatcherWorkerConfig();
+    private LAEventsHandlerConfig laEventsHandlerConfig = new LAEventsHandlerConfig();
 
-    // Azure authentication
-    private String authenticationType;
-    private String clientId;
-    private String clientSecret;
-    private String tenantId;
-
-    // Shutdown configuration
-    private int maxGracefulShutdownTimeSeconds;
+    @Getter
+    @Setter
+    public static class SenderWorkerConfig {
+        private String dataCollectionEndpoint;
+        private String dcrId;
+        private String streamName;
+        private int maxRetriesNum;
+        private int initialWaitTimeSeconds;    
+        private String authenticationType;
+        private String clientId;
+        private String clientSecret;
+        private String tenantId;
+    }
+    
+    @Getter
+    @Setter
+    public static class BatcherWorkerConfig {
+        private int maxWaitingTimeSecondsForBatch;
+    }
+    
+    @Getter
+    @Setter
+    public static class LAEventsHandlerConfig {
+        private int maxGracefulShutdownTimeSeconds;
+    }
 }

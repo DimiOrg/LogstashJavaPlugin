@@ -15,11 +15,11 @@ public class BatcherWorker extends AbstractWorker<LogstashLAHandlerEvent> {
     
     private BlockingQueue<LAEventsHandlerEvent> eventsQueue;
     private BlockingQueue<List<Object>> batchesQueue;
-    private LAEventsHandlerConfiguration configuration;
+    private LAEventsHandlerConfiguration.BatcherWorkerConfig configuration;
     
     public BatcherWorker(BlockingQueue<LAEventsHandlerEvent> eventsQueue, 
                         BlockingQueue<List<Object>> batchesQueue, 
-                        LAEventsHandlerConfiguration configuration) {
+                        LAEventsHandlerConfiguration.BatcherWorkerConfig configuration) {
         this.eventsQueue = eventsQueue; 
         this.batchesQueue = batchesQueue;
         this.configuration = configuration;
@@ -32,11 +32,12 @@ public class BatcherWorker extends AbstractWorker<LogstashLAHandlerEvent> {
         List<Object> batch = new ArrayList<Object>();
         
         while (running && !Thread.currentThread().isInterrupted() && 
-                System.currentTimeMillis() - startTimeMillis < configuration.getMaxWaitingTimeSeconds() * 1000) {
+                System.currentTimeMillis() - startTimeMillis < configuration.getMaxWaitingTimeSecondsForBatch() * 1000) {
             eventsQueue.drainTo(batch);
         }
 
         if (!batch.isEmpty()) {
+            logger.debug("Adding batch to queue. Batch size: " + batch.size());
             batchesQueue.add(batch);
         }
     }
