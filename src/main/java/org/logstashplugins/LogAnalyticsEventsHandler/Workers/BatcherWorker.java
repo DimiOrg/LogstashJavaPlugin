@@ -19,7 +19,6 @@ import com.azure.core.util.serializer.JsonSerializer;
 import com.azure.core.util.serializer.JsonSerializerProviders;
 import com.azure.json.JsonProviders;
 import com.azure.json.JsonWriter;
-import com.azure.monitor.ingestion.implementation.LogsIngestionRequest;
 
 public class BatcherWorker extends AbstractWorker<LogstashLAHandlerEvent> {
     private static final Logger logger = LoggerFactory.getLogger(BatcherWorker.class);
