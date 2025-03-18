@@ -127,7 +127,6 @@ public class MicrosoftSentinelOutput implements Output {
             DATA_COLLECTION_ENDPOINT_CONFIG,
             DCR_ID_CONFIG,
             STREAM_NAME_CONFIG,
-            MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG,
             KEYS_TO_KEEP_CONFIG,
             AUTHENTICATION_TYPE_CONFIG,
             CLIENT_ID_CONFIG,
