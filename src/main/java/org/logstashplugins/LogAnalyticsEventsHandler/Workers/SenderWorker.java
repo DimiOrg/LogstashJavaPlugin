@@ -63,6 +63,8 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
                     logger.error("Failed to upload batch. Dropping batch. Batch size: " + batch.size());
                 }            
             }
+            // Sleep for a short time to avoid busy waiting
+            Thread.sleep(10);
         }         
     }
 

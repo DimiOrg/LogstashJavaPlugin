@@ -52,6 +52,8 @@ public class MicrosoftSentinelOutput implements Output {
 
     public static final PluginConfigSpec<Long> MAX_GRACEFUL_SHUTDOWN_TIME_SECONDS_CONFIG =
             PluginConfigSpec.numSetting("max_graceful_shutdown_time_seconds", 60);
+    public static final PluginConfigSpec<Long> MAX_WAITING_FOR_UNIFIER_TIME_SECONDS_CONFG = 
+            PluginConfigSpec.numSetting("max_waiting_for_unifier_time_seconds", 10);
 
     private final String id;
     private final CountDownLatch done = new CountDownLatch(1);
@@ -99,7 +101,7 @@ public class MicrosoftSentinelOutput implements Output {
         eventsHandlerConfiguration.getSenderWorkerConfig().setTenantId(config.get(TENANT_ID_CONFIG));
 
         eventsHandlerConfiguration.getBatcherWorkerConfig().setMaxWaitingTimeSecondsForBatch(config.get(MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG).intValue());
-
+        eventsHandlerConfiguration.getUnifierWorkerConfig().setMaxWaitingForUnifierTimeSeconds(config.get(MAX_WAITING_FOR_UNIFIER_TIME_SECONDS_CONFG).intValue());
         eventsHandlerConfiguration.getLaEventsHandlerConfig().setMaxGracefulShutdownTimeSeconds(config.get(MAX_GRACEFUL_SHUTDOWN_TIME_SECONDS_CONFIG).intValue());
 
         return eventsHandlerConfiguration;
@@ -125,14 +127,14 @@ public class MicrosoftSentinelOutput implements Output {
             DATA_COLLECTION_ENDPOINT_CONFIG,
             DCR_ID_CONFIG,
             STREAM_NAME_CONFIG,
-            MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG,
             KEYS_TO_KEEP_CONFIG,
             AUTHENTICATION_TYPE_CONFIG,
             CLIENT_ID_CONFIG,
             CLIENT_SECRET_CONFIG,
             TENANT_ID_CONFIG,
             MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG,
-            MAX_GRACEFUL_SHUTDOWN_TIME_SECONDS_CONFIG
+            MAX_GRACEFUL_SHUTDOWN_TIME_SECONDS_CONFIG,
+            MAX_WAITING_FOR_UNIFIER_TIME_SECONDS_CONFG
         );
     }
 
