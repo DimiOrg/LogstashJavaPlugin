@@ -32,6 +32,7 @@ public class UnifierWorker extends AbstractWorker<List<Object>> {
         while(running && !Thread.currentThread().isInterrupted() && 
             System.currentTimeMillis() - startTimeMillis < configuration.getMaxWaitingForUnifierTimeSeconds() * 1000) {
             batchesQueue.drainTo(originalBatches);
+            Thread.sleep(10);
         }
 
         unifyAndSendBatch(originalBatches);

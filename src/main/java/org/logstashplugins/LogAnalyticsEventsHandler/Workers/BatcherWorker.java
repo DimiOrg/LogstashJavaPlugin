@@ -54,6 +54,8 @@ public class BatcherWorker extends AbstractWorker<LogstashLAHandlerEvent> {
         while (running && !Thread.currentThread().isInterrupted() && 
                 System.currentTimeMillis() - startTimeMillis < configuration.getMaxWaitingTimeSecondsForBatch() * 1000) {
             inputQueue.drainTo(batch);
+            // Sleep for a short time to avoid busy waiting
+            Thread.sleep(10);
         }
 
         if (!batch.isEmpty()) {
