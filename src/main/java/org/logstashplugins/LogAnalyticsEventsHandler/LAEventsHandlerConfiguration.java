@@ -7,6 +7,7 @@ import lombok.Setter;
 public class LAEventsHandlerConfiguration {
     private SenderWorkerConfig senderWorkerConfig = new SenderWorkerConfig();
     private BatcherWorkerConfig batcherWorkerConfig = new BatcherWorkerConfig();
+    private UnifierWorkerConfig unifierWorkerConfig = new UnifierWorkerConfig();
     private LAEventsHandlerConfig laEventsHandlerConfig = new LAEventsHandlerConfig();
 
     @Getter
@@ -33,5 +34,11 @@ public class LAEventsHandlerConfiguration {
     @Setter
     public static class LAEventsHandlerConfig {
         private int maxGracefulShutdownTimeSeconds;
+    }
+
+    @Getter
+    @Setter
+    public static class UnifierWorkerConfig {
+        private int maxWaitingForUnifierTimeSeconds;
     }
 }
