@@ -62,15 +62,21 @@ public class MicrosoftSentinelOutput implements Output {
 
     private LAEventsHandlerConfiguration createEventsHandlerConfiguration(Configuration config) {
         LAEventsHandlerConfiguration eventsHandlerConfiguration = new LAEventsHandlerConfiguration();
-        // set all configuration options
+
+        // Log Analytics configuration
         eventsHandlerConfiguration.getSenderWorkerConfig().setDataCollectionEndpoint(config.get(MicrosoftSentinelOutputConfigKeys.DATA_COLLECTION_ENDPOINT_CONFIG));
         eventsHandlerConfiguration.getSenderWorkerConfig().setDcrId(config.get(MicrosoftSentinelOutputConfigKeys.DCR_ID_CONFIG));
         eventsHandlerConfiguration.getSenderWorkerConfig().setStreamName(config.get(MicrosoftSentinelOutputConfigKeys.STREAM_NAME_CONFIG));
+
+        // Azure authentication
         eventsHandlerConfiguration.getSenderWorkerConfig().setAuthenticationType(config.get(MicrosoftSentinelOutputConfigKeys.AUTHENTICATION_TYPE_CONFIG));
         eventsHandlerConfiguration.getSenderWorkerConfig().setClientId(config.get(MicrosoftSentinelOutputConfigKeys.CLIENT_ID_CONFIG));   
         eventsHandlerConfiguration.getSenderWorkerConfig().setClientSecret(config.get(MicrosoftSentinelOutputConfigKeys.CLIENT_SECRET_CONFIG));
         eventsHandlerConfiguration.getSenderWorkerConfig().setTenantId(config.get(MicrosoftSentinelOutputConfigKeys.TENANT_ID_CONFIG));
 
+        // Worker configuration
+        eventsHandlerConfiguration.getSenderWorkerConfig().setMaxRetriesNum(config.get(MicrosoftSentinelOutputConfigKeys.MAX_RETRIES_NUM_CONFIG).intValue());
+        eventsHandlerConfiguration.getSenderWorkerConfig().setInitialWaitTimeSeconds(config.get(MicrosoftSentinelOutputConfigKeys.INITIAL_WAIT_TIME_SECONDS_CONFIG).intValue());
         eventsHandlerConfiguration.getBatcherWorkerConfig().setMaxWaitingTimeSecondsForBatch(config.get(MicrosoftSentinelOutputConfigKeys.MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG).intValue());
         eventsHandlerConfiguration.getUnifierWorkerConfig().setMaxWaitingForUnifierTimeSeconds(config.get(MicrosoftSentinelOutputConfigKeys.MAX_WAITING_FOR_UNIFIER_TIME_SECONDS_CONFG).intValue());
         eventsHandlerConfiguration.getLaEventsHandlerConfig().setMaxGracefulShutdownTimeSeconds(config.get(MicrosoftSentinelOutputConfigKeys.MAX_GRACEFUL_SHUTDOWN_TIME_SECONDS_CONFIG).intValue());

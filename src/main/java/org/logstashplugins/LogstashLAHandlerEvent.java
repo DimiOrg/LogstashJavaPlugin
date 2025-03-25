@@ -21,7 +21,7 @@ public class LogstashLAHandlerEvent extends HashMap<String, Object> implements L
 
     public LogstashLAHandlerEvent(Map<String, Object> eventDataAsIdentityMap, List<String> keysToKeep) {
         List<String> keysToRemove = new ArrayList<>();
-        Map<String, Object> keysToUpdate = new HashMap<>();
+        Map<String, String> keysToUpdate = new HashMap<>();
 
         for (Map.Entry<String, Object> entry : eventDataAsIdentityMap.entrySet()) {
             String key = entry.getKey();
@@ -29,28 +29,31 @@ public class LogstashLAHandlerEvent extends HashMap<String, Object> implements L
 
             if (keysToConvert.containsKey(key)) {
                 // convert keys containing @ to ls_. this is needed because @ is not allowed in kql
-                keysToUpdate.put(keysToConvert.get(key), value);
+                keysToUpdate.put(keysToConvert.get(key), value.toString());
                 keysToRemove.add(key);
             } else if (key.equals(HOST_TARGET_KEY)) {
                 // flatten host key
                 Map<String, Object> host = (Map<String, Object>) value;
                 if (host.containsKey("name")) {
-                    keysToUpdate.put(HOST_TARGET_KEY, host.get("name"));
+                    keysToUpdate.put(HOST_TARGET_KEY, (host.get("name")).toString());
                 } else if (host.containsKey("hostname")) {
-                    keysToUpdate.put(HOST_TARGET_KEY, host.get("hostname"));
+                    keysToUpdate.put(HOST_TARGET_KEY, (host.get("hostname")).toString());
                 } else {
-                    keysToUpdate.put(HOST_TARGET_KEY, host);
+                    keysToUpdate.put(HOST_TARGET_KEY, host.toString());
                 }
                 keysToRemove.add(key);
             } else if (key.equals(EVENT_KEY)) {
                 // flatten event key
                 Map<String, Object> event = (Map<String, Object>) value;
-                keysToUpdate.put(SEQUENCE_KEY, event.get("sequence"));
+                if (event.get("sequence") != null) {
+                    keysToUpdate.put(SEQUENCE_KEY, (event.get("sequence")).toString());
+                }
                 keysToRemove.add(key);
             } else {
                 // if keysToKeep is empty, keep all keys. otherwise, only keep the keys in keysToKeep
                 if (keysToKeep == null || keysToKeep.isEmpty() || keysToKeep.contains(key)) {
-                    this.put(key, value);
+                    keysToUpdate.put(key, value.toString());
+                    this.put(key, value.toString());
                 } else {
                     keysToRemove.add(key);
                 }
