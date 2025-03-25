@@ -21,7 +21,6 @@ public class MicrosoftSentinelOutputTest {
     public void testMicrosoftSentinelOutput() {
         String prefix = "Prefix";
         Map<String, Object> configValues = new HashMap<>();
-        configValues.put(MicrosoftSentinelOutput.PREFIX_CONFIG.name(), prefix);
         Configuration config = new ConfigurationImpl(configValues);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         MicrosoftSentinelOutput output = new MicrosoftSentinelOutput("test-id", config, null, baos);
