@@ -69,9 +69,6 @@ public class LogstashLAHandlerEvent extends HashMap<String, Object> implements L
         this.putAll(eventDataAsIdentityMap);
     }
 
-
-    
-
     @Override
     public Object getLog() {
         return this;
