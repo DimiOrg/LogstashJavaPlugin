@@ -64,7 +64,7 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
                 }            
             }
             // Sleep for a short time to avoid busy waiting
-            Thread.sleep(10);
+            Thread.sleep(configuration.getSleepTimeMillis());
         }         
     }
 

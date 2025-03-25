@@ -153,16 +153,25 @@ public class LAEventsHandler {
     }
 
     private int getBatcherWorkerCount() {
+        if (configuration.getLaEventsHandlerConfig().getBatcherWorkersCount() != null) {
+            return configuration.getLaEventsHandlerConfig().getBatcherWorkersCount();
+        }
         int availableProcessors = Runtime.getRuntime().availableProcessors();
         return (availableProcessors - 1) / 3;
     }
 
     private int getSenderWorkerCount() {
+        if (configuration.getLaEventsHandlerConfig().getSenderWorkersCount() != null) {
+            return configuration.getLaEventsHandlerConfig().getSenderWorkersCount();
+        }
         int availableProcessors = Runtime.getRuntime().availableProcessors();
         return (availableProcessors - 1) / 3;
     }
 
     private int getUnifierWorkerCount() {
+        if (configuration.getLaEventsHandlerConfig().getUnifierWorkersCount() != null) {
+            return configuration.getLaEventsHandlerConfig().getUnifierWorkersCount();
+        }
         int availableProcessors = Runtime.getRuntime().availableProcessors();
         return (availableProcessors - 1) / 3;
     }

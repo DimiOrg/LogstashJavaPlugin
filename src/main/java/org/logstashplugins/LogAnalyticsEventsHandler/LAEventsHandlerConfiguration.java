@@ -22,23 +22,29 @@ public class LAEventsHandlerConfiguration {
         private String clientId;
         private String clientSecret;
         private String tenantId;
+        private int sleepTimeMillis;
     }
     
     @Getter
     @Setter
     public static class BatcherWorkerConfig {
         private int maxWaitingTimeSecondsForBatch;
+        private int sleepTimeMillis;
     }
     
     @Getter
     @Setter
     public static class LAEventsHandlerConfig {
         private int maxGracefulShutdownTimeSeconds;
+        private Integer batcherWorkersCount;
+        private Integer unifierWorkersCount;
+        private Integer senderWorkersCount;
     }
 
     @Getter
     @Setter
     public static class UnifierWorkerConfig {
         private int maxWaitingForUnifierTimeSeconds;
+        private int sleepTimeMillis;
     }
 }

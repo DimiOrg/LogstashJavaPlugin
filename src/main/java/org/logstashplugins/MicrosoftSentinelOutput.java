@@ -24,36 +24,6 @@ import org.slf4j.LoggerFactory;
 public class MicrosoftSentinelOutput implements Output {
 
     private static final Logger logger = LoggerFactory.getLogger(MicrosoftSentinelOutput.class);
-    
-    public static final PluginConfigSpec<String> PREFIX_CONFIG =
-            PluginConfigSpec.stringSetting("prefix", "");
-
-    // Log Analytics configuration
-    public static final PluginConfigSpec<String> DATA_COLLECTION_ENDPOINT_CONFIG = 
-            PluginConfigSpec.stringSetting("data_collection_endpoint", "");
-    public static final PluginConfigSpec<String> DCR_ID_CONFIG =
-            PluginConfigSpec.stringSetting("dcr_id", "");
-    public static final PluginConfigSpec<String> STREAM_NAME_CONFIG =
-            PluginConfigSpec.stringSetting("stream_name", "");
-    public static final PluginConfigSpec<Long> MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG =
-            PluginConfigSpec.numSetting("max_waiting_time_for_batch_seconds", 10);
-    public static final PluginConfigSpec<List<Object>> KEYS_TO_KEEP_CONFIG =
-            PluginConfigSpec.arraySetting("keys_to_keep");
-    
-    // Azure authentication
-    public static final PluginConfigSpec<String> AUTHENTICATION_TYPE_CONFIG =
-            PluginConfigSpec.stringSetting("authentication_type", "");
-    public static final PluginConfigSpec<String> CLIENT_ID_CONFIG =
-            PluginConfigSpec.stringSetting("client_id", "");
-    public static final PluginConfigSpec<String> CLIENT_SECRET_CONFIG =
-            PluginConfigSpec.stringSetting("client_secret", "");
-    public static final PluginConfigSpec<String> TENANT_ID_CONFIG =
-            PluginConfigSpec.stringSetting("tenant_id", "");
-
-    public static final PluginConfigSpec<Long> MAX_GRACEFUL_SHUTDOWN_TIME_SECONDS_CONFIG =
-            PluginConfigSpec.numSetting("max_graceful_shutdown_time_seconds", 60);
-    public static final PluginConfigSpec<Long> MAX_WAITING_FOR_UNIFIER_TIME_SECONDS_CONFG = 
-            PluginConfigSpec.numSetting("max_waiting_for_unifier_time_seconds", 10);
 
     private final String id;
     private final CountDownLatch done = new CountDownLatch(1);
@@ -74,7 +44,7 @@ public class MicrosoftSentinelOutput implements Output {
 
         logger.info("Starting Microsoft Sentinel output plugin");
         LAEventsHandlerConfiguration eventsHandlerConfiguration = createEventsHandlerConfiguration(config);
-        keysToKeep = (List<String>) (List<?>) config.get(KEYS_TO_KEEP_CONFIG);
+        keysToKeep = (List<String>) (List<?>) config.get(MicrosoftSentinelOutputConfigKeys.KEYS_TO_KEEP_CONFIG);
 
         eventsHandler = new LAEventsHandler(eventsHandlerConfiguration);
     }
@@ -92,17 +62,24 @@ public class MicrosoftSentinelOutput implements Output {
     private LAEventsHandlerConfiguration createEventsHandlerConfiguration(Configuration config) {
         LAEventsHandlerConfiguration eventsHandlerConfiguration = new LAEventsHandlerConfiguration();
         // set all configuration options
-        eventsHandlerConfiguration.getSenderWorkerConfig().setDataCollectionEndpoint(config.get(DATA_COLLECTION_ENDPOINT_CONFIG));
-        eventsHandlerConfiguration.getSenderWorkerConfig().setDcrId(config.get(DCR_ID_CONFIG));
-        eventsHandlerConfiguration.getSenderWorkerConfig().setStreamName(config.get(STREAM_NAME_CONFIG));
-        eventsHandlerConfiguration.getSenderWorkerConfig().setAuthenticationType(config.get(AUTHENTICATION_TYPE_CONFIG));
-        eventsHandlerConfiguration.getSenderWorkerConfig().setClientId(config.get(CLIENT_ID_CONFIG));   
-        eventsHandlerConfiguration.getSenderWorkerConfig().setClientSecret(config.get(CLIENT_SECRET_CONFIG));
-        eventsHandlerConfiguration.getSenderWorkerConfig().setTenantId(config.get(TENANT_ID_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setDataCollectionEndpoint(config.get(MicrosoftSentinelOutputConfigKeys.DATA_COLLECTION_ENDPOINT_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setDcrId(config.get(MicrosoftSentinelOutputConfigKeys.DCR_ID_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setStreamName(config.get(MicrosoftSentinelOutputConfigKeys.STREAM_NAME_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setAuthenticationType(config.get(MicrosoftSentinelOutputConfigKeys.AUTHENTICATION_TYPE_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setClientId(config.get(MicrosoftSentinelOutputConfigKeys.CLIENT_ID_CONFIG));   
+        eventsHandlerConfiguration.getSenderWorkerConfig().setClientSecret(config.get(MicrosoftSentinelOutputConfigKeys.CLIENT_SECRET_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setTenantId(config.get(MicrosoftSentinelOutputConfigKeys.TENANT_ID_CONFIG));
 
-        eventsHandlerConfiguration.getBatcherWorkerConfig().setMaxWaitingTimeSecondsForBatch(config.get(MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG).intValue());
-        eventsHandlerConfiguration.getUnifierWorkerConfig().setMaxWaitingForUnifierTimeSeconds(config.get(MAX_WAITING_FOR_UNIFIER_TIME_SECONDS_CONFG).intValue());
-        eventsHandlerConfiguration.getLaEventsHandlerConfig().setMaxGracefulShutdownTimeSeconds(config.get(MAX_GRACEFUL_SHUTDOWN_TIME_SECONDS_CONFIG).intValue());
+        eventsHandlerConfiguration.getBatcherWorkerConfig().setMaxWaitingTimeSecondsForBatch(config.get(MicrosoftSentinelOutputConfigKeys.MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG).intValue());
+        eventsHandlerConfiguration.getUnifierWorkerConfig().setMaxWaitingForUnifierTimeSeconds(config.get(MicrosoftSentinelOutputConfigKeys.MAX_WAITING_FOR_UNIFIER_TIME_SECONDS_CONFG).intValue());
+        eventsHandlerConfiguration.getLaEventsHandlerConfig().setMaxGracefulShutdownTimeSeconds(config.get(MicrosoftSentinelOutputConfigKeys.MAX_GRACEFUL_SHUTDOWN_TIME_SECONDS_CONFIG).intValue());
+
+        eventsHandlerConfiguration.getSenderWorkerConfig().setSleepTimeMillis(config.get(MicrosoftSentinelOutputConfigKeys.WORKER_SLEEP_TIME_MILLIS_CONFIG).intValue());
+        eventsHandlerConfiguration.getBatcherWorkerConfig().setSleepTimeMillis(config.get(MicrosoftSentinelOutputConfigKeys.WORKER_SLEEP_TIME_MILLIS_CONFIG).intValue());
+        eventsHandlerConfiguration.getUnifierWorkerConfig().setSleepTimeMillis(config.get(MicrosoftSentinelOutputConfigKeys.WORKER_SLEEP_TIME_MILLIS_CONFIG).intValue());
+        eventsHandlerConfiguration.getLaEventsHandlerConfig().setBatcherWorkersCount(config.get(MicrosoftSentinelOutputConfigKeys.BATCHER_WORKERS_COUNT_CONFIG).intValue());
+        eventsHandlerConfiguration.getLaEventsHandlerConfig().setSenderWorkersCount(config.get(MicrosoftSentinelOutputConfigKeys.SENDER_WORKERS_COUNT_CONFIG).intValue());
+        eventsHandlerConfiguration.getLaEventsHandlerConfig().setUnifierWorkersCount(config.get(MicrosoftSentinelOutputConfigKeys.UNIFIER_WORKERS_COUNT_CONFIG).intValue());
 
         return eventsHandlerConfiguration;
     }
@@ -123,19 +100,7 @@ public class MicrosoftSentinelOutput implements Output {
 
     @Override
     public Collection<PluginConfigSpec<?>> configSchema() {
-        return List.of(
-            DATA_COLLECTION_ENDPOINT_CONFIG,
-            DCR_ID_CONFIG,
-            STREAM_NAME_CONFIG,
-            KEYS_TO_KEEP_CONFIG,
-            AUTHENTICATION_TYPE_CONFIG,
-            CLIENT_ID_CONFIG,
-            CLIENT_SECRET_CONFIG,
-            TENANT_ID_CONFIG,
-            MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG,
-            MAX_GRACEFUL_SHUTDOWN_TIME_SECONDS_CONFIG,
-            MAX_WAITING_FOR_UNIFIER_TIME_SECONDS_CONFG
-        );
+        return MicrosoftSentinelOutputConfigKeys.getKeysCollection();
     }
 
     @Override
