@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 
 import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandler;
@@ -77,9 +78,13 @@ public class MicrosoftSentinelOutput implements Output {
         eventsHandlerConfiguration.getSenderWorkerConfig().setSleepTimeMillis(config.get(MicrosoftSentinelOutputConfigKeys.WORKER_SLEEP_TIME_MILLIS_CONFIG).intValue());
         eventsHandlerConfiguration.getBatcherWorkerConfig().setSleepTimeMillis(config.get(MicrosoftSentinelOutputConfigKeys.WORKER_SLEEP_TIME_MILLIS_CONFIG).intValue());
         eventsHandlerConfiguration.getUnifierWorkerConfig().setSleepTimeMillis(config.get(MicrosoftSentinelOutputConfigKeys.WORKER_SLEEP_TIME_MILLIS_CONFIG).intValue());
-        eventsHandlerConfiguration.getLaEventsHandlerConfig().setBatcherWorkersCount(config.get(MicrosoftSentinelOutputConfigKeys.BATCHER_WORKERS_COUNT_CONFIG).intValue());
-        eventsHandlerConfiguration.getLaEventsHandlerConfig().setSenderWorkersCount(config.get(MicrosoftSentinelOutputConfigKeys.SENDER_WORKERS_COUNT_CONFIG).intValue());
-        eventsHandlerConfiguration.getLaEventsHandlerConfig().setUnifierWorkersCount(config.get(MicrosoftSentinelOutputConfigKeys.UNIFIER_WORKERS_COUNT_CONFIG).intValue());
+
+        Optional<Long> batcherWorkersCount = Optional.ofNullable(config.get(MicrosoftSentinelOutputConfigKeys.BATCHER_WORKERS_COUNT_CONFIG));
+        batcherWorkersCount.ifPresent(value -> eventsHandlerConfiguration.getLaEventsHandlerConfig().setBatcherWorkersCount(value.intValue()));
+        Optional<Long> senderWorkersCount = Optional.ofNullable(config.get(MicrosoftSentinelOutputConfigKeys.SENDER_WORKERS_COUNT_CONFIG));
+        senderWorkersCount.ifPresent(value -> eventsHandlerConfiguration.getLaEventsHandlerConfig().setSenderWorkersCount(value.intValue()));
+        Optional<Long> unifierWorkersCount = Optional.ofNullable(config.get(MicrosoftSentinelOutputConfigKeys.UNIFIER_WORKERS_COUNT_CONFIG));
+        unifierWorkersCount.ifPresent(value -> eventsHandlerConfiguration.getLaEventsHandlerConfig().setUnifierWorkersCount(value.intValue()));
 
         return eventsHandlerConfiguration;
     }
