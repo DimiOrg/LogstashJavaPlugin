@@ -9,6 +9,7 @@ ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 ENV LOGSTASH_CORE_PATH=/usr/share/logstash
 ENV LS_JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+ENV PIPELINE_ECS_COMPATIBILITY=disabled
 
 # Install dependencies
 RUN apt-get update && \

@@ -25,7 +25,9 @@ public class MicrosoftSentinelOutputConfigKeys {
                 PluginConfigSpec.numSetting("max_graceful_shutdown_time_seconds", 60);
         public static final PluginConfigSpec<Long> MAX_WAITING_FOR_UNIFIER_TIME_SECONDS_CONFG = 
                 PluginConfigSpec.numSetting("max_waiting_for_unifier_time_seconds", 10);
-
+        public static final PluginConfigSpec<Long> MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG =
+                PluginConfigSpec.numSetting("max_waiting_time_for_batch_seconds", 10);
+                
         // Log Analytics configuration
         public static final PluginConfigSpec<String> DATA_COLLECTION_ENDPOINT_CONFIG = 
                 PluginConfigSpec.stringSetting("data_collection_endpoint", "");
@@ -33,8 +35,6 @@ public class MicrosoftSentinelOutputConfigKeys {
                 PluginConfigSpec.stringSetting("dcr_id", "");
         public static final PluginConfigSpec<String> STREAM_NAME_CONFIG =
                 PluginConfigSpec.stringSetting("stream_name", "");
-        public static final PluginConfigSpec<Long> MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG =
-                PluginConfigSpec.numSetting("max_waiting_time_for_batch_seconds", 10);
         public static final PluginConfigSpec<List<Object>> KEYS_TO_KEEP_CONFIG =
                 PluginConfigSpec.arraySetting("keys_to_keep");
 

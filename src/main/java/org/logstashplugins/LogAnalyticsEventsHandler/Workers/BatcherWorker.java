@@ -66,10 +66,10 @@ public class BatcherWorker extends AbstractWorker<LogstashLAHandlerEvent> {
             }
 
             if(isLowTraffic) {
-                logger.debug("Adding batch to unifier queue. Batch size: " + batch.size());
+                logger.debug("Adding batch to unifier queue. Batch size: " + batch.size() + ". Thread id: " + Thread.currentThread().getId());
                 unifiersQueue.add(batch);
             } else {
-                logger.debug("Adding batch to senders queue. Batch size: " + batch.size());
+                logger.debug("Adding batch to senders queue. Batch size: " + batch.size() + ". Thread id: " + Thread.currentThread().getId());
                 sendersQueue.add(batch);
             }
         }

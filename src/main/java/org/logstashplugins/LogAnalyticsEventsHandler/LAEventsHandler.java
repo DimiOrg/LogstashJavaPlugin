@@ -55,7 +55,7 @@ public class LAEventsHandler {
         }
         for (int i = 0; i < senderWorkerCount; i++) {
             SenderWorker senderWorker = new SenderWorker(sendersQueue, configuration.getSenderWorkerConfig());
-            sendersExecutorService.scheduleAtFixedRate(senderWorker, i, 1, TimeUnit.MINUTES);
+            sendersExecutorService.scheduleAtFixedRate(senderWorker, 0, 1, TimeUnit.MINUTES);
             senderWorkers.add(senderWorker);
         }
         for (int i = 0; i < unifierWorkerCount; i++) {
@@ -68,7 +68,6 @@ public class LAEventsHandler {
     }
 
     public void handle(LAEventsHandlerEvent event) {
-        logger.debug("Events queue size: {}", inputQueue.size());
         inputQueue.add(event);
     }
 

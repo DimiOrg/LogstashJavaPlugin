@@ -55,7 +55,6 @@ public class MicrosoftSentinelOutput implements Output {
         Iterator<Event> z = events.iterator();
         while (z.hasNext() && !stopped) {
             LAEventsHandlerEvent event = new LogstashLAHandlerEvent(z.next().getData(), keysToKeep);
-            logger.debug("Handling event: {}", event.toString());
             eventsHandler.handle(event);
         }
     }
