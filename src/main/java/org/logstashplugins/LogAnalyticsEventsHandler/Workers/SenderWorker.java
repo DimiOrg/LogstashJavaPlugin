@@ -31,7 +31,8 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
             configuration.getAuthenticationType(),
             configuration.getClientId(),
             configuration.getClientSecret(),
-            configuration.getTenantId()
+            configuration.getTenantId(),
+            configuration.getCertificatePath()
         );
         this.client = new LogsIngestionClientBuilder()
                 .credential(tokenCredential)

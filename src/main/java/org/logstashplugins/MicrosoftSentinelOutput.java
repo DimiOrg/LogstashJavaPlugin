@@ -49,6 +49,8 @@ public class MicrosoftSentinelOutput implements Output {
             PluginConfigSpec.stringSetting("client_secret", "");
     public static final PluginConfigSpec<String> TENANT_ID_CONFIG =
             PluginConfigSpec.stringSetting("tenant_id", "");
+    public static final PluginConfigSpec<String> CERTIFICATE_PATH_CONFIG =
+            PluginConfigSpec.stringSetting("certificate_path", "");
 
     public static final PluginConfigSpec<Long> MAX_GRACEFUL_SHUTDOWN_TIME_SECONDS_CONFIG =
             PluginConfigSpec.numSetting("max_graceful_shutdown_time_seconds", 60);
@@ -99,6 +101,7 @@ public class MicrosoftSentinelOutput implements Output {
         eventsHandlerConfiguration.getSenderWorkerConfig().setClientId(config.get(CLIENT_ID_CONFIG));   
         eventsHandlerConfiguration.getSenderWorkerConfig().setClientSecret(config.get(CLIENT_SECRET_CONFIG));
         eventsHandlerConfiguration.getSenderWorkerConfig().setTenantId(config.get(TENANT_ID_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setCertificatePath(config.get(CERTIFICATE_PATH_CONFIG));
 
         eventsHandlerConfiguration.getBatcherWorkerConfig().setMaxWaitingTimeSecondsForBatch(config.get(MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG).intValue());
         eventsHandlerConfiguration.getUnifierWorkerConfig().setMaxWaitingForUnifierTimeSeconds(config.get(MAX_WAITING_FOR_UNIFIER_TIME_SECONDS_CONFG).intValue());
@@ -132,6 +135,7 @@ public class MicrosoftSentinelOutput implements Output {
             CLIENT_ID_CONFIG,
             CLIENT_SECRET_CONFIG,
             TENANT_ID_CONFIG,
+            CERTIFICATE_PATH_CONFIG,
             MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG,
             MAX_GRACEFUL_SHUTDOWN_TIME_SECONDS_CONFIG,
             MAX_WAITING_FOR_UNIFIER_TIME_SECONDS_CONFG
