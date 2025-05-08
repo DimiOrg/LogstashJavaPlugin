@@ -29,7 +29,7 @@ output {
 
 ### Managed Identity Authentication (Azure VM)
 
-Use this method when authnticating with Azure Managed Identity enabled.
+Use this method when authenticating with Azure Managed Identity enabled.
 
 **Example configuration:**
 
