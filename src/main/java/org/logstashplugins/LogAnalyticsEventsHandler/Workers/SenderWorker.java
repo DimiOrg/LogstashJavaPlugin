@@ -3,6 +3,7 @@ package org.logstashplugins.LogAnalyticsEventsHandler.Workers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.logstashplugins.LogAnalyticsEventsHandler.LAEventsHandlerConfiguration;
 import org.logstashplugins.LogAnalyticsEventsHandler.TokenCredentialFactory;
@@ -53,19 +54,14 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
 
     @Override
     public void process() throws InterruptedException {
-        while(running && !Thread.currentThread().isInterrupted() && !batchesQueue.isEmpty()) {
-            List<List<Object>> batches = new ArrayList<List<Object>>();
-            batchesQueue.drainTo(batches);
-            logger.debug("Sending " + batches.size() + " batches to Log Analytics");
-            for(List<Object> batch : batches) {         
+        while (running && !Thread.currentThread().isInterrupted()) {
+            List<Object> batch = batchesQueue.poll(100, TimeUnit.MILLISECONDS);
+            if (batch != null) {
                 if (!uploadWithExpBackoffRetries(batch, configuration.getMaxRetriesNum(), configuration.getInitialWaitTimeSeconds())) {
-                    // If upload fails, write a log with the batch size and drop the batch. later on we will implement a DLQ
                     logger.error("Failed to upload batch. Dropping batch. Batch size: " + batch.size());
-                }            
+                }
             }
-            // Sleep for a short time to avoid busy waiting
-            Thread.sleep(10);
-        }         
+        }
     }
 
     @Override
@@ -102,7 +98,7 @@ public class SenderWorker extends AbstractWorker<List<Object>> {
     
         while (!success && retries < maxRetries) {
             try {
-                logger.debug("Uploading batch. Batch size: " + batch.size());
+                logger.debug("Uploading batch. Batch size: " + batch.size() + ". Thread id: " + Thread.currentThread().getId());
                 client.upload(configuration.getDcrId(), configuration.getStreamName(), batch);
                 success = true; // If upload is successful, exit the loop
             } catch (Exception e) {

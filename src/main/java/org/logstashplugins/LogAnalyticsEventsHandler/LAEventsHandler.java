@@ -55,7 +55,7 @@ public class LAEventsHandler {
         }
         for (int i = 0; i < senderWorkerCount; i++) {
             SenderWorker senderWorker = new SenderWorker(sendersQueue, configuration.getSenderWorkerConfig());
-            sendersExecutorService.scheduleAtFixedRate(senderWorker, i, 1, TimeUnit.MINUTES);
+            sendersExecutorService.scheduleAtFixedRate(senderWorker, 0, 1, TimeUnit.MINUTES);
             senderWorkers.add(senderWorker);
         }
         for (int i = 0; i < unifierWorkerCount; i++) {
@@ -68,7 +68,6 @@ public class LAEventsHandler {
     }
 
     public void handle(LAEventsHandlerEvent event) {
-        logger.debug("Events queue size: {}", inputQueue.size());
         inputQueue.add(event);
     }
 
@@ -153,16 +152,25 @@ public class LAEventsHandler {
     }
 
     private int getBatcherWorkerCount() {
+        if (configuration.getLaEventsHandlerConfig().getBatcherWorkersCount() != null) {
+            return configuration.getLaEventsHandlerConfig().getBatcherWorkersCount();
+        }
         int availableProcessors = Runtime.getRuntime().availableProcessors();
         return (availableProcessors - 1) / 3;
     }
 
     private int getSenderWorkerCount() {
+        if (configuration.getLaEventsHandlerConfig().getSenderWorkersCount() != null) {
+            return configuration.getLaEventsHandlerConfig().getSenderWorkersCount();
+        }
         int availableProcessors = Runtime.getRuntime().availableProcessors();
         return (availableProcessors - 1) / 3;
     }
 
     private int getUnifierWorkerCount() {
+        if (configuration.getLaEventsHandlerConfig().getUnifierWorkersCount() != null) {
+            return configuration.getLaEventsHandlerConfig().getUnifierWorkersCount();
+        }
         int availableProcessors = Runtime.getRuntime().availableProcessors();
         return (availableProcessors - 1) / 3;
     }
