@@ -72,6 +72,9 @@ public class MicrosoftSentinelOutput implements Output {
         eventsHandlerConfiguration.getSenderWorkerConfig().setClientId(config.get(MicrosoftSentinelOutputConfigKeys.CLIENT_ID_CONFIG));   
         eventsHandlerConfiguration.getSenderWorkerConfig().setClientSecret(config.get(MicrosoftSentinelOutputConfigKeys.CLIENT_SECRET_CONFIG));
         eventsHandlerConfiguration.getSenderWorkerConfig().setTenantId(config.get(MicrosoftSentinelOutputConfigKeys.TENANT_ID_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setCertificatePath(config.get(MicrosoftSentinelOutputConfigKeys.CERTIFICATE_PATH_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setCertificateType(config.get(MicrosoftSentinelOutputConfigKeys.CERTIFICATE_TYPE_CONFIG));
+        eventsHandlerConfiguration.getSenderWorkerConfig().setCertificatePassword(config.get(MicrosoftSentinelOutputConfigKeys.CERTIFICATE_PASSWORD_CONFIG));
 
         // Worker configuration
         eventsHandlerConfiguration.getSenderWorkerConfig().setMaxRetriesNum(config.get(MicrosoftSentinelOutputConfigKeys.MAX_RETRIES_NUM_CONFIG).intValue());

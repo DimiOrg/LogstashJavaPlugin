@@ -47,6 +47,12 @@ public class MicrosoftSentinelOutputConfigKeys {
                 PluginConfigSpec.stringSetting("client_secret", "");
         public static final PluginConfigSpec<String> TENANT_ID_CONFIG =
                 PluginConfigSpec.stringSetting("tenant_id", "");
+        public static final PluginConfigSpec<String> CERTIFICATE_PATH_CONFIG =
+                PluginConfigSpec.stringSetting("certificate_path", "");
+        public static final PluginConfigSpec<String> CERTIFICATE_TYPE_CONFIG =
+                PluginConfigSpec.stringSetting("certificate_type", "");
+        public static final PluginConfigSpec<String> CERTIFICATE_PASSWORD_CONFIG =
+                PluginConfigSpec.stringSetting("certificate_password", "");
 
         public static Collection<PluginConfigSpec<?>> getKeysCollection() {
         return List.of(
@@ -58,6 +64,9 @@ public class MicrosoftSentinelOutputConfigKeys {
                 CLIENT_ID_CONFIG,
                 CLIENT_SECRET_CONFIG,
                 TENANT_ID_CONFIG,
+                CERTIFICATE_PATH_CONFIG,
+                CERTIFICATE_TYPE_CONFIG,
+                CERTIFICATE_PASSWORD_CONFIG,
                 MAX_WAITING_TIME_FOR_BATCH_SECONDS_CONFIG,
                 MAX_GRACEFUL_SHUTDOWN_TIME_SECONDS_CONFIG,
                 MAX_WAITING_FOR_UNIFIER_TIME_SECONDS_CONFG,

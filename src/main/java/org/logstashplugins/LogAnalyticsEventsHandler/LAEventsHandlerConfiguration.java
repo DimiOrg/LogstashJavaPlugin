@@ -23,6 +23,9 @@ public class LAEventsHandlerConfiguration {
         private String clientSecret;
         private String tenantId;
         private int sleepTimeMillis;
+        private String certificatePath;
+        private String certificatePassword;
+        private String certificateType;
     }
     
     @Getter
