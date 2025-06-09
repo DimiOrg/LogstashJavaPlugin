@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class AbstractWorker<T> implements Worker {
     private static final Logger logger = LoggerFactory.getLogger(AbstractWorker.class);
-    protected volatile boolean running;
+    protected static volatile boolean running = true;
 
     @Override
     public void run() {
