@@ -49,8 +49,8 @@ COPY ../envsInstallationResources/Logstash8.16/settings.gradle /usr/share/logsta
 COPY ../envsInstallationResources/Logstash8.16/build.gradle /usr/share/logstash/plugins/my-plugin/build.gradle
 COPY ../envsInstallationResources/Logstash8.16/rubyUtils.gradle /usr/share/rubyUtils.gradle
 
-# Download the versions.yml files
-RUN wget -O /usr/share/logstash/plugins/my-plugin/versions.yml https://raw.githubusercontent.com/elastic/logstash/main/versions.yml
+# Copy the versions.yml files
+COPY ../envsInstallationResources/Logstash8.16/versions.yml /usr/share/logstash/plugins/my-plugin/versions.yml
 
 # Create the VERSION file for the plugin
 RUN echo "0.1.0" > /usr/share/logstash/plugins/my-plugin/VERSION
